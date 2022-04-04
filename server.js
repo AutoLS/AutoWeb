@@ -1,6 +1,15 @@
 const express = require('express');
 const path = require('path');
+const https = require('https');
+const http = require('http');
+var fs = require('fs');
 const app = express();
+
+// NOTE: For ssh in the future
+// const options = {
+// 	key: fs.readFileSync('./privkey.pem'),
+// 	cert: fs.readFileSync('./fullchain.pem')
+// };
 
 const logger = (req, res, next) =>
 {
@@ -10,7 +19,6 @@ const logger = (req, res, next) =>
 }
 
 app.use(logger);
-
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/api/getRandomNum', (req, res) => {
@@ -21,6 +29,6 @@ app.get('/api/getRandomNum', (req, res) => {
     console.log('Generated num: ' + num);
 });
 
-app.listen(8080, () => {
-    console.log("Listening on port 8080...");
+http.createServer(app).listen(80, () => {
+    console.log("Listening on port 80...");
 });
