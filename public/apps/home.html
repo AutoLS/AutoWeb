@@ -8,7 +8,7 @@
         <script src="https://cdn.tailwindcss.com"></script>
     </head>
     <body class="bg-black">
-        <div id="wrapper" class="rounded-lg bg-white h-screen px-5 mt-4 mx-8 xl:mx-[300px] md:px-20">
+        <div id="wrapper" class="rounded-lg bg-white h-screen p-5 mt-4 mx-8 md:m-auto md:mt-4 md:w-4/5 md:px-20">
             <div id="header">
                 <div id="branding" class="py-5">
                     <div class="flex flex-row">
@@ -27,10 +27,7 @@
                                   <a href="home.html" class="block py-2 pr-4 pl-3 text-white border-b border-gray-100 md:bg-transparent md:text-white md:p-0 md:border-0" aria-current="page">Apps</a>
                                 </li>
                                 <li>
-                                    <a href="#" class="block py-2 pr-4 pl-3 text-gray-400 border-b border-gray-100 transition duration-500 hover:bg-gray-50 md:transition md:duration-500 md:hover:bg-transparent md:border-0 md:hover:text-white md:p-0">Projects</a>
-                                  </li>
-                                <li>
-                                  <a href="#" class="block py-2 pr-4 pl-3 text-gray-400 border-b border-gray-100 transition duration-500 hover:bg-gray-50 md:transition md:duration-500 md:hover:bg-transparent md:border-0 md:hover:text-white md:p-0">Blog</a>
+                                  <a href="../blogs/home.html" class="block py-2 pr-4 pl-3 text-gray-400 border-b border-gray-100 transition duration-500 hover:bg-gray-50 md:transition md:duration-500 md:hover:bg-transparent md:border-0 md:hover:text-white md:p-0">Blogs</a>
                                 </li>
                               </ul>
                             </div>
@@ -40,21 +37,27 @@
             </div>
             <div id="body" class="font-serif">
                 <h2 class="text-2xl font-bold">List of web apps</h2>
-                <h3 class="text-xl underline mt-3">Games</h3>
-                <ul class="list-disc list-inside mt-1">
-                    <li><a href="guessing_game/main.html" class="hover:text-blue-700">Guess number game</a></li>
-                    <li>Coming soon..</li>
-                </ul>
-                <h3 class="text-xl underline mt-3">Tools</h3>
-                <ul class="list-disc list-inside mt-1">
-                    <li><a href="unit_converter/main.html" class="hover:text-blue-700">Unit converter</a></li>
-                    <li><a href="calculator/main.html" class="hover:text-blue-700">Calculator</a></li>
-                    <li>Coming soon..</li>
-                </ul>
+                <div class="grid grid-cols-1 md:grid-cols-2 p-3">
+                    <div>
+                        <h3 class="text-xl underline underline-offset-2 mt-3">Games</h3>
+                        <ul class="list-disc list-inside mt-1">
+                            <li><a href="guessing_game/main.html" class="hover:text-blue-700">Guess number game</a></li>
+                            <li>Coming soon..</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="text-xl underline underline-offset-2 mt-3">Tools</h3>
+                        <ul class="list-disc list-inside mt-1">
+                            <li><a href="unit_converter/main.html" class="hover:text-blue-700">Unit converter</a></li>
+                            <li><a href="calculator/main.html" class="hover:text-blue-700">Calculator</a></li>
+                            <li>Coming soon..</li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
         <footer class="text-white text-center">
-            <p>Copyright (c) 2020 by AutoLs. All Rights Reserved.</p>
+            <p>Copyright (c) 2022 by AutoLs. All Rights Reserved.</p>
         </footer>
     </body>
 </html>
