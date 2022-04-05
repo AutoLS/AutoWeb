@@ -6,10 +6,10 @@ var fs = require('fs');
 const app = express();
 
 // NOTE: For ssh in the future
-// const options = {
-// 	key: fs.readFileSync('./privkey.pem'),
-// 	cert: fs.readFileSync('./fullchain.pem')
-// };
+const options = {
+	key: fs.readFileSync('./privkey.pem'),
+	cert: fs.readFileSync('./fullchain.pem')
+};
 
 const logger = (req, res, next) =>
 {
@@ -29,6 +29,6 @@ app.get('/api/getRandomNum', (req, res) => {
     console.log('Generated num: ' + num);
 });
 
-http.createServer(app).listen(80, () => {
-    console.log("Listening on port 80...");
+https.createServer(options, app).listen(443, () => {
+    console.log("Listening on port 443...");
 });
