@@ -8,7 +8,7 @@
         <script src="https://cdn.tailwindcss.com"></script>
     </head>
     <body class="bg-black">
-        <div id="wrapper" class="rounded-lg bg-white p-5 mt-4 mx-8 md:m-auto md:mt-4 md:w-4/5 md:px-20">
+        <div id="wrapper" class="rounded-lg bg-white p-5 mt-4 mx-1 md:m-auto md:mt-4 md:w-4/5 md:px-20">
             <div id="header">
                 <div id="branding" class="py-5">
                     <div class="flex flex-row">
@@ -87,47 +87,49 @@ struct bitmap_header
                         <p>Note that we are specifying 1 byte as the packing alignment for the structure. The compiler will automatically reserve extra bytes to align with the 'most-bytes' member in the struct for performance reasons so it will write out incorrectly if we didn't pack the structure!</p>
 					
                         <p>Below is a table which describes the file header:</p>
-                        <table class="table-auto border-collapse border font-sans">
-                            <thead>
-                                <tr>
-                                    <th class="border border-slate-600 p-1">Name</th>
-                                    <th class="border border-slate-600 p-1">Size in bytes</th>
-                                    <th class="border border-slate-600 p-1">Description</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td class="border border-slate-700 p-1">FileType</td>
-                                    <td class="border border-slate-700 p-1">2</td>
-                                    <td class="border border-slate-700 p-1">Must be 0x4D42 in hexadecimal, which is 'BM' in ASCII.</td>
-                                </tr>
-                                <tr>
-                                    <td class="border border-slate-700 p-1">FileSize</td>
-                                    <td class="border border-slate-700 p-1">4</td>
-                                    <td class="border border-slate-700 p-1">The <strong>total</strong> size of the BMP file in bytes. (The size of the headers + the size of the pixels data)</td>
-                                </tr>
-                                <tr>
-                                    <td class="border border-slate-700 p-1">Reserved1</td>
-                                    <td class="border border-slate-700 p-1">2</td>
-                                    <td class="border border-slate-700 p-1">Unused. Can be 0.</td>
-                                </tr>
-                                <tr>
-                                    <td class="border border-slate-700 p-1">Reserved2</td>
-                                    <td class="border border-slate-700 p-1">2</td>
-                                    <td class="border border-slate-700 p-1">Unused. Can be 0.</td>
-                                </tr>
-                                <tr>
-                                    <td class="border border-slate-700 p-1">Offset</td>
-                                    <td class="border border-slate-700 p-1">4</td>
-                                    <td class="border border-slate-700 p-1">An offset from the beginning of the header to the end of the header. (In C/C++ we can just do <code>sizeof(header)</code> to get the offset)</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <div class="overflow-auto">
+                            <table class="table-auto border-collapse border font-sans">
+                                <thead>
+                                    <tr>
+                                        <th class="border border-slate-600 p-1">Name</th>
+                                        <th class="border border-slate-600 p-1">Size in bytes</th>
+                                        <th class="border border-slate-600 p-1">Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="border border-slate-700 p-1">FileType</td>
+                                        <td class="border border-slate-700 p-1">2</td>
+                                        <td class="border border-slate-700 p-1">Must be 0x4D42 in hexadecimal, which is 'BM' in ASCII.</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="border border-slate-700 p-1">FileSize</td>
+                                        <td class="border border-slate-700 p-1">4</td>
+                                        <td class="border border-slate-700 p-1">The <strong>total</strong> size of the BMP file in bytes. (The size of the headers + the size of the pixels data)</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="border border-slate-700 p-1">Reserved1</td>
+                                        <td class="border border-slate-700 p-1">2</td>
+                                        <td class="border border-slate-700 p-1">Unused. Can be 0.</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="border border-slate-700 p-1">Reserved2</td>
+                                        <td class="border border-slate-700 p-1">2</td>
+                                        <td class="border border-slate-700 p-1">Unused. Can be 0.</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="border border-slate-700 p-1">Offset</td>
+                                        <td class="border border-slate-700 p-1">4</td>
+                                        <td class="border border-slate-700 p-1">An offset from the beginning of the header to the end of the header. (In C/C++ we can just do <code>sizeof(header)</code> to get the offset)</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                         <br>
                         <h3 id="info-header" class="text-xl font-bold mb-3">BMP Info Header</h1>
                         <p>The info header is a structure that stores information about an image. For example: the width and height of an image, is it compressed, and the pixel format etc.</p>
                         <p>Here is the structure which represents the info header in C/C++</p>
-                        <pre class="bg-gray-300 p-3">
+                        <pre class="bg-gray-300 p-3 overflow-auto">
 #pragma pack(push, 1)		
 struct info_header
 {
@@ -145,74 +147,76 @@ struct info_header
 };
 #pragma pack(pop)
                         </pre>
-                        <p>Below is a table which describes the info header:</p>			
-                        <table class="border table-auto border-collapse font-sans">
-                            <tr>
-                                <th class="border border-slate-600">Name</th>
-                                <th class="border border-slate-600">Size in bytes</th>
-                                <th class="border border-slate-600">Description</th>
-                            </tr>
-                            <tr>
-                                <td class="border border-slate-700 p-1">Size</td>
-                                <td class="border border-slate-700 p-1">4</td>
-                                <td class="border border-slate-700 p-1">Size of the info header (40 bytes in total)</td>
-                            </tr>
-                            <tr>
-                                <td class="border border-slate-700 p-1">Width</td>
-                                <td class="border border-slate-700 p-1">4</td>
-                                <td class="border border-slate-700 p-1">Image's width</td>
-                            </tr>
-                            <tr>
-                                <td class="border border-slate-700 p-1">Height</td>
-                                <td class="border border-slate-700 p-1">4</td>
-                                <td class="border border-slate-700 p-1">Image's height</td>
-                            </tr>
-                            <tr>
-                                <td class="border border-slate-700 p-1">Planes</td>
-                                <td class="border border-slate-700 p-1">2</td>
-                                <td class="border border-slate-700 p-1">Number of planes. Must set to 1.</td>
-                            </tr>
-                            <tr>
-                                <td class="border border-slate-700 p-1">BitsPerPixel</td>
-                                <td class="border border-slate-700 p-1">2</td>
-                                <td class="border border-slate-700 p-1">Number of bits per pixel, which is basically the color depth of an image. For example, 32 bits for RGBA (8 bits per color channel).</td>
-                            </tr>
-                            <tr>
-                                <td class="border border-slate-700 p-1">Compression</td>
-                                <td class="border border-slate-700 p-1">4</td>
-                                <td class="border border-slate-700 p-1">The compression method for the image. Default to 0 if there's none. For all possible values, see: <a href="https://en.wikipedia.org/wiki/BMP_file_format">Wiki</a></td>
-                            </tr>
-                            <tr>
-                                <td class="border border-slate-700 p-1">SizeOfBitmap</td>
-                                <td class="border border-slate-700 p-1">4</td>
-                                <td class="border border-slate-700 p-1">The size of the image in bytes. This can be computed by calculating: Width * Height * BytesPerPixel</td>
-                            </tr>
-                            <tr>
-                                <td class="border border-slate-700 p-1">HorResolution</td>
-                                <td class="border border-slate-700 p-1">4</td>
-                                <td class="border border-slate-700 p-1">The horizontal resolution of the image (Pixel per metre). Can set to 0 if unused.</td>
-                            </tr>
-                            <tr>
-                                <td class="border border-slate-700 p-1">VertResolution</td>
-                                <td class="border border-slate-700 p-1">4</td>
-                                <td class="border border-slate-700 p-1">The vertical resolution of the image (Pixel per metre). Can set to 0 if unused.</td>
-                            </tr>
-                            <tr>
-                                <td class="border border-slate-700 p-1">ColorsUsed</td>
-                                <td class="border border-slate-700 p-1">4</td>
-                                <td class="border border-slate-700 p-1">The number of colors in the color palette. 0 defaults to 2<sup>n</sup>.</td>
-                            </tr>
-                            <tr>
-                                <td class="border border-slate-700 p-1">ColorsImportant</td>
-                                <td class="border border-slate-700 p-1">4</td>
-                                <td class="border border-slate-700 p-1">The number of important colors used. This is usually set to 0 which means that every color is important.</td>
-                            </tr>
-                        </table>
+                        <p>Below is a table which describes the info header:</p>
+                        <div class="overflow-auto">			
+                            <table class="border table-auto border-collapse font-sans">
+                                <tr>
+                                    <th class="border border-slate-600">Name</th>
+                                    <th class="border border-slate-600">Size in bytes</th>
+                                    <th class="border border-slate-600">Description</th>
+                                </tr>
+                                <tr>
+                                    <td class="border border-slate-700 p-1">Size</td>
+                                    <td class="border border-slate-700 p-1">4</td>
+                                    <td class="border border-slate-700 p-1">Size of the info header (40 bytes in total)</td>
+                                </tr>
+                                <tr>
+                                    <td class="border border-slate-700 p-1">Width</td>
+                                    <td class="border border-slate-700 p-1">4</td>
+                                    <td class="border border-slate-700 p-1">Image's width</td>
+                                </tr>
+                                <tr>
+                                    <td class="border border-slate-700 p-1">Height</td>
+                                    <td class="border border-slate-700 p-1">4</td>
+                                    <td class="border border-slate-700 p-1">Image's height</td>
+                                </tr>
+                                <tr>
+                                    <td class="border border-slate-700 p-1">Planes</td>
+                                    <td class="border border-slate-700 p-1">2</td>
+                                    <td class="border border-slate-700 p-1">Number of planes. Must set to 1.</td>
+                                </tr>
+                                <tr>
+                                    <td class="border border-slate-700 p-1">BitsPerPixel</td>
+                                    <td class="border border-slate-700 p-1">2</td>
+                                    <td class="border border-slate-700 p-1">Number of bits per pixel, which is basically the color depth of an image. For example, 32 bits for RGBA (8 bits per color channel).</td>
+                                </tr>
+                                <tr>
+                                    <td class="border border-slate-700 p-1">Compression</td>
+                                    <td class="border border-slate-700 p-1">4</td>
+                                    <td class="border border-slate-700 p-1">The compression method for the image. Default to 0 if there's none. For all possible values, see: <a href="https://en.wikipedia.org/wiki/BMP_file_format">Wiki</a></td>
+                                </tr>
+                                <tr>
+                                    <td class="border border-slate-700 p-1">SizeOfBitmap</td>
+                                    <td class="border border-slate-700 p-1">4</td>
+                                    <td class="border border-slate-700 p-1">The size of the image in bytes. This can be computed by calculating: Width * Height * BytesPerPixel</td>
+                                </tr>
+                                <tr>
+                                    <td class="border border-slate-700 p-1">HorResolution</td>
+                                    <td class="border border-slate-700 p-1">4</td>
+                                    <td class="border border-slate-700 p-1">The horizontal resolution of the image (Pixel per metre). Can set to 0 if unused.</td>
+                                </tr>
+                                <tr>
+                                    <td class="border border-slate-700 p-1">VertResolution</td>
+                                    <td class="border border-slate-700 p-1">4</td>
+                                    <td class="border border-slate-700 p-1">The vertical resolution of the image (Pixel per metre). Can set to 0 if unused.</td>
+                                </tr>
+                                <tr>
+                                    <td class="border border-slate-700 p-1">ColorsUsed</td>
+                                    <td class="border border-slate-700 p-1">4</td>
+                                    <td class="border border-slate-700 p-1">The number of colors in the color palette. 0 defaults to 2<sup>n</sup>.</td>
+                                </tr>
+                                <tr>
+                                    <td class="border border-slate-700 p-1">ColorsImportant</td>
+                                    <td class="border border-slate-700 p-1">4</td>
+                                    <td class="border border-slate-700 p-1">The number of important colors used. This is usually set to 0 which means that every color is important.</td>
+                                </tr>
+                            </table>
+                        </div>  
                         <br>
                         <h3 id="implementation-code" class="text-xl font-bold mb-3">Writing a BMP image</h1>
                         <p>Now that we have both the file and the info header we can start creating a program that output a BMP file!</p>
                         <p>First of all, before we write out an image, we have to fill out the pixels data of the image. In this example I will fill out the entire image red:</p>
-                        <pre class="bg-gray-300 p-3">
+                        <pre class="bg-gray-300 p-3 overflow-auto">
 uint32 ImageSize = Width * Height * sizeof(uint32);
 uint32* Pixels = (uint32*)malloc(ImageSize); // Allocate a buffer to store the pixels data
 
