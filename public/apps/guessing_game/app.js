@@ -12,7 +12,7 @@ const guessCountText = document.querySelector('.guess-count');
 //NOTE: we can just generate the number in client-side but for educational purpose we will do it on server-side
 const getRandomNum = async () =>
 {
-    const result = await fetch('http://localhost:80/api/getRandomNum');
+    const result = await fetch('/api/getRandomNum');
 
     if(result.ok)
     {
