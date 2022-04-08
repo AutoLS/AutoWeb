@@ -4,28 +4,6 @@ const mat4 = glMatrix.mat4;
 
 let gl;
 
-let vertexSource = `
-attribute vec4 aVertexPosition;
-
-uniform mat4 model;
-uniform mat4 projection;
-
-void main() 
-{
-    gl_Position = projection * model * aVertexPosition;
-}
-`;
-
-let fragmentSource = `
-precision mediump float;
-uniform vec4 color;
-
-void main()
-{
-    gl_FragColor = color;
-}
-`;
-
 let shaderInfo = {};
 let lastRender = 0;
 
@@ -78,7 +56,7 @@ function V3(v)
     return [v.x, v.y, v.z];
 }
 
-function main() 
+async function main() 
 {
     const canvas = document.querySelector("#glCanvas");
     // Initialize the GL context
@@ -92,49 +70,52 @@ function main()
     
     let renderer;
 
-    renderer = createRenderer(vertexSource, fragmentSource);
+    renderer = await createRenderer('vertex.glsl', 'fragment.glsl');
 
-    shaderInfo = {
-        program: renderer,
-        attribLocs: {
-            vertexPosition: gl.getAttribLocation(renderer, 'aVertexPosition'),
-        },
-        uniformLocs: {
-            projectionMatrix: gl.getUniformLocation(renderer, 'projection'),
-            modelMatrix: gl.getUniformLocation(renderer, 'model'),
-        },
-    };
-
-    const vbo = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, vbo);
-    
-    const rectVert = [
-        0.5, 0.5,
-        -0.5, 0.5,
-        0.5, -0.5,
-        -0.5, -0.5,
-    ];
-
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(rectVert), gl.STATIC_DRAW);
-    gl.vertexAttribPointer(shaderInfo.attribLocs.vertexPosition, 2, gl.FLOAT, false, 0, 0);
-    gl.enableVertexAttribArray(shaderInfo.attribLocs.vertexPosition);
-
-    gl.enable(gl.DEPTH_TEST);
-    gl.depthFunc(gl.LEQUAL);
-
-    //Initialize game state
-    let head = {p: {x: 110, y: 110, z: 0}, color: [1, 1, 0, 1]};
-    gameState.snake.push(head);
-    for(let i = 1; i < 5; ++i)
+    if(renderer.ok)
     {
-        //NOTE: why is everything a reference in js? wtf? This is very prone to bugs
-        let node = structuredClone(head);
-        node.color = [1, 1, 1, 1];
-        node.p.x += (gameState.snakeRadius.x)*2*i;
-        gameState.snake.push(node);
+        shaderInfo = {
+            program: renderer.shader,
+            attribLocs: {
+                vertexPosition: gl.getAttribLocation(renderer.shader, 'aVertexPosition'),
+            },
+            uniformLocs: {
+                projectionMatrix: gl.getUniformLocation(renderer.shader, 'projection'),
+                modelMatrix: gl.getUniformLocation(renderer.shader, 'model'),
+            },
+        };
+    
+        const vbo = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, vbo);
+        
+        const rectVert = [
+            0.5, 0.5,
+            -0.5, 0.5,
+            0.5, -0.5,
+            -0.5, -0.5,
+        ];
+    
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(rectVert), gl.STATIC_DRAW);
+        gl.vertexAttribPointer(shaderInfo.attribLocs.vertexPosition, 2, gl.FLOAT, false, 0, 0);
+        gl.enableVertexAttribArray(shaderInfo.attribLocs.vertexPosition);
+    
+        gl.enable(gl.DEPTH_TEST);
+        gl.depthFunc(gl.LEQUAL);
+    
+        //Initialize game state
+        let head = {p: {x: 110, y: 110, z: 0}, color: [1, 1, 0, 1]};
+        gameState.snake.push(head);
+        for(let i = 1; i < 5; ++i)
+        {
+            //NOTE: why is everything a reference in js? wtf? This is very prone to bugs
+            let node = structuredClone(head);
+            node.color = [1, 1, 1, 1];
+            node.p.x += (gameState.snakeRadius.x)*2*i;
+            gameState.snake.push(node);
+        }
+    
+        window.requestAnimationFrame(game);
     }
-
-    window.requestAnimationFrame(game);
 }
 
 function keyDown(e)
@@ -414,17 +395,35 @@ function drawRect(shaderInfo, position, dim, color)
 }
 
 //NOTE: This piece of shit doesnt work, why??
-function getShader(shader)
+async function getShader(shader)
 {
-    return fetch(shader).then(result => result.text()).then(src => {
-        return src;
-    }).catch(err => console.warn(err));
+    const result = await fetch(shader);
+
+    if(result.ok)
+    {
+        let text = await result.text();
+        return {src: text, ok: true};
+    }
+    else
+    {
+        return {err: 'FILE NOT FOUND', ok: false};
+    }
 }
 
-function createRenderer(vsrc, fsrc)
+async function createRenderer(v, f)
 {
-    let vertexShader = loadShader(gl, gl.VERTEX_SHADER, vsrc);
-    let fragmentShader = loadShader(gl, gl.FRAGMENT_SHADER, fsrc);
+    const vsrc = await getShader(v);
+    const fsrc = await getShader(f);
+
+    if(vsrc.ok && fsrc.ok) return {shader: createShader(vsrc, fsrc), ok: true};
+
+    return {err: 'create renderer failed!', ok: false};
+}
+
+function createShader(v, f)
+{
+    let vertexShader = loadShader(gl, gl.VERTEX_SHADER, v.src);
+    let fragmentShader = loadShader(gl, gl.FRAGMENT_SHADER, f.src);
 
     // Create the shader program
 
