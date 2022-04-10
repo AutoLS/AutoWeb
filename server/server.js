@@ -1,9 +1,9 @@
 const express = require('express');
 const path = require('path');
 const https = require('https');
-const http = require('http');
 var fs = require('fs');
 const app = express();
+const socketio = require('socket.io');
 
 // NOTE: For ssh
 const options = {
@@ -19,7 +19,8 @@ const logger = (req, res, next) =>
 }
 
 app.use(logger);
-app.use(express.static(path.join(__dirname, 'public')));
+const clientPath = `${__dirname}/../public`;
+app.use(express.static(clientPath));
 
 app.get('/api/getRandomNum', (req, res) => {
     let num = Math.floor(Math.random() * 100) + 1;
@@ -29,6 +30,23 @@ app.get('/api/getRandomNum', (req, res) => {
     console.log('Generated num: ' + num);
 });
 
-https.createServer(options, app).listen(443, () => {
+const server = https.createServer(options, app).listen(443, () => {
     console.log("Listening on port 443...");
+});
+
+const io = socketio(server);
+
+io.on('connect', (sock) => {
+    let name = 'anon_' + sock.id.slice(0, 4);
+    sock.emit('message', 'You are connected to the chatroom.');
+    sock.broadcast.emit('message', `${name} has joined the chatroom.`);
+
+    sock.on('message', (text) => {
+        
+        io.emit('message', `${name} > ${text}`);
+    });
+
+    sock.on('disconnect', () => {
+        sock.broadcast.emit('message', `${name} has left the chatroom.`);
+    });
 });
