@@ -18,9 +18,20 @@ const onChatSubmit = (e) =>
 
     const input = document.querySelector('#chat-input');
     let text = input.value;
-    input.value = '';
 
-    sock.emit('message', text);
+    //NOTE: For now we don't allow user to submit space only, might change in the future
+    let onlySpace = true;
+
+    for(let i = 0; i < text.length; ++i)
+    {
+        if(text[i] != ' ') onlySpace = false;
+    }
+
+    if(text !== '' && !onlySpace)
+    {
+        sock.emit('message', text);
+    }
+    input.value = '';
 };
 
 document.querySelector('#chat-form').addEventListener('submit', onChatSubmit);
