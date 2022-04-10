@@ -116,6 +116,11 @@ async function main()
     
         window.requestAnimationFrame(game);
     }
+    else
+    {
+        let err = document.createElement('p');
+        err.textContent = "ERR: Create renderer failed!";
+    }
 }
 
 function keyDown(e)
