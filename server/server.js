@@ -37,10 +37,16 @@ const server = https.createServer(options, app).listen(443, () => {
 const io = socketio(server);
 
 io.on('connect', (sock) => {
-    let name = 'anon_' + sock.id.slice(0, 4);
-    sock.emit('message', 'You are connected to the chatroom.');
-    sock.broadcast.emit('message', `${name} has joined the chatroom.`);
+    let name;
 
+    sock.on('join_chat', ({username}) => {
+        name = username;
+        console.log(username);
+        sock.broadcast.emit('message', `${name} has joined the chatroom.`);
+    });
+
+    sock.emit('message', 'You are connected to the chatroom.');
+    
     sock.on('message', (text) => {
         
         io.emit('message', `${name} > ${text}`);
