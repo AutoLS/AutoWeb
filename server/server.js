@@ -36,23 +36,35 @@ const server = https.createServer(options, app).listen(443, () => {
 
 const io = socketio(server);
 
+const usersList = [];
+
 io.on('connect', (sock) => {
     let name;
 
-    sock.on('join_chat', ({username}) => {
-        name = username;
-        console.log(username);
+    sock.on('join_chat', async ({username}) => {
+        sock.emit('message', 'You are connected to the chatroom.');
+        if(username === undefined)
+        {
+            name = 'anon_' + sock.id.slice(0, 4);
+        }
+        else name = username;
+        //console.log(username);
         sock.broadcast.emit('message', `${name} has joined the chatroom.`);
+        sock.data.username = name;
+
+        new_user = {id: sock.id, username: name};
+        usersList.push(new_user);
+        io.emit('update_users', {users: usersList});
     });
 
-    sock.emit('message', 'You are connected to the chatroom.');
-    
     sock.on('message', (text) => {
-        
         io.emit('message', `${name} > ${text}`);
     });
 
-    sock.on('disconnect', () => {
+    sock.on('disconnect', async () => {
         sock.broadcast.emit('message', `${name} has left the chatroom.`);
+        let index = usersList.findIndex(user => { return user.id === sock.id; });
+        usersList.splice(index, 1);
+        io.emit('update_users', {users: usersList});
     });
 });

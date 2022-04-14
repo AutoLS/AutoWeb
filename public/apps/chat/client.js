@@ -4,6 +4,39 @@ const sock = io();
 const username = Qs.parse(location.search, {ignoreQueryPrefix: true});
 sock.emit('join_chat', username);
 
+//Update users
+let displayUsers = false;
+function showUsers()
+{
+    const list = document.querySelector('#mobile-users-list');
+    displayUsers = !displayUsers;
+    if(displayUsers) list.style.display = 'initial';
+    else list.style.display = 'none';
+}
+
+window.addEventListener('resize', () => 
+{
+    const list = document.querySelector('#mobile-users-list');
+    displayUsers = false;
+    list.style.display = 'none';
+});
+
+function updateUserList(data)
+{
+    const list = document.querySelector('#users-list');
+    list.innerHTML = '';
+    for(user of data.users)
+    {
+        const li = document.createElement('li');
+        //console.log(user);
+        li.textContent = '- ' + user.username;
+        list.appendChild(li);
+    }
+    document.querySelector('#mobile-users-list').innerHTML = list.innerHTML;
+}
+
+sock.on('update_users', updateUserList);
+
 //chat.html
 const writeLog = (text) => 
 {
