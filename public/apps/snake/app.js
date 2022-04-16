@@ -255,10 +255,10 @@ function game(timestamp)
         gameState.currentDir = directions.down;
     }
 
-    if(gameState.pressedKeys.space)
-    {
-        gameState.currentDir = directions.none;
-    }
+    // if(gameState.pressedKeys.space)
+    // {
+    //     gameState.currentDir = directions.none;
+    // }
 
     if(gameState.currentDir != directions.none && gameState.updateTimer.complete)
     {
