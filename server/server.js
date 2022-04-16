@@ -40,7 +40,7 @@ const usersList = [];
 
 io.on('connect', (sock) => {
     let name;
-
+    
     sock.on('join_chat', async ({username}) => {
         sock.emit('message', 'You are connected to the chatroom.');
         if(username === undefined)
@@ -62,8 +62,8 @@ io.on('connect', (sock) => {
     });
 
     sock.on('disconnect', async () => {
-        sock.broadcast.emit('message', `${name} has left the chatroom.`);
         let index = usersList.findIndex(user => { return user.id === sock.id; });
+        sock.broadcast.emit('message', `${usersList[index].username} has left the chatroom.`);
         usersList.splice(index, 1);
         io.emit('update_users', {users: usersList});
     });
