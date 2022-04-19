@@ -162,11 +162,12 @@ function updateStatus ()
     $status.html(status);
     $fen.html(game.fen);
     $pgn.html(game.pgn);
+
+    board.position(game.fen);
 }
 
 socket.on('player_move', gameState => {
     game = gameState;
-    board.position(game.fen);
     updateStatus();
 });
 
@@ -181,7 +182,7 @@ socket.on('player_disconnect', (gameState, username) => {
     {
         board.orientation('white');
     }
-    board.position(game.fen);
+    
     updateStatus();
 });
 
