@@ -1,6 +1,7 @@
 import { Chess } from 'chess.js';
 import { Server } from 'socket.io';
 import * as https from 'https';
+import * as fs from 'fs';
 
 // NOTE: For ssh
 const options = {
