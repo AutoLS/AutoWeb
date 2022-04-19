@@ -82,7 +82,7 @@ const onChatSubmit = () =>
 
     if(text !== '' && !onlySpace)
     {
-        writeLog(`${urlData.username} > ` + text);
+        writeLog(`${urlData.username}: ` + text);
         socket.emit('message', {username: urlData.username, message: text, room: gameCode});
     }
     input.value = '';
