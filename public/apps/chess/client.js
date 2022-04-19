@@ -18,6 +18,16 @@ const $pgn = $('#pgn');
 //Update html
 welcomeHeader.innerHTML = `Welcome to chess, ${urlData.username}!`;
 
+function validUsername()
+{
+    if(urlData.username === undefined)
+    {
+        location.href = `https://${window.location.hostname}/apps/chess/index.html`;
+    }
+}
+
+validUsername();
+
 createGameButton.addEventListener('click', () => {
     lobbyDiv.style.display = 'none';
     gameScreen.style.display = 'block';
