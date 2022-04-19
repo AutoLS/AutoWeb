@@ -16,7 +16,7 @@ const $fen = $('#fen');
 const $pgn = $('#pgn');
 
 //Update html
-welcomeHeader.innerHTML = `Welcome to chess, ${urlData.username}!`;
+welcomeHeader.innerHTML = `Welcome to chess beta, ${urlData.username}!`;
 
 function validUsername()
 {
