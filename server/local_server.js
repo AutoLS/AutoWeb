@@ -1,15 +1,8 @@
 const express = require('express');
 const path = require('path');
-const https = require('https');
-var fs = require('fs');
+const http = require('http');
 const app = express();
 const socketio = require('socket.io');
-
-// NOTE: For ssh
-const options = {
-	key: fs.readFileSync('./privkey.pem'),
-	cert: fs.readFileSync('./fullchain.pem')
-};
 
 const logger = (req, res, next) =>
 {
@@ -30,8 +23,8 @@ app.get('/api/getRandomNum', (req, res) => {
     console.log('Generated num: ' + num);
 });
 
-const server = https.createServer(options, app).listen(443, () => {
-    console.log("Listening on port 443...");
+const server = http.createServer(app).listen(8080, () => {
+    console.log("Listening on port 8080...");
 });
 
 const io = socketio(server);
