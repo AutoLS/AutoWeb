@@ -6,7 +6,7 @@ const httpServer = http.createServer();
 
 const io = new Server(httpServer, {
     cors: {
-        origin: ['https://autols.ca'],
+        origin: ['http://autols.ca'],
     },
 });
 
