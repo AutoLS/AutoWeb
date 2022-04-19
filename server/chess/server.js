@@ -1,4 +1,4 @@
-import * as ChessJS from 'chess.js';
+import { Chess } from 'chess.js';
 import { Server } from 'socket.io';
 import * as http from 'http';
 
@@ -37,7 +37,7 @@ io.on('connection', client =>
         client.data.username = username;
         let roomName = username + '_' + client.id.slice(0, 10);
         clientRooms[client.id] = roomName;
-        chessGames[roomName] = new ChessJS.Chess();
+        chessGames[roomName] = new Chess();
         client.emit('show_game_code', roomName);
 
         let gameState = makeGameState(roomName, 'w');
