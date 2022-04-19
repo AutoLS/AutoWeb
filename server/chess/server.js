@@ -1,10 +1,15 @@
 import { Chess } from 'chess.js';
 import { Server } from 'socket.io';
-import * as http from 'http';
+import * as https from 'https';
 
-const httpServer = http.createServer();
+// NOTE: For ssh
+const options = {
+    key: fs.readFileSync('./privkey.pem'),
+	cert: fs.readFileSync('./fullchain.pem')
+};
+const httpsServer = https.createServer(options);
 
-const io = new Server(httpServer, {
+const io = new Server(httpsServer, {
     cors: {
         origin: ['https://autols.ca'],
     },
@@ -116,5 +121,5 @@ io.on('connection', client =>
     });
 });
 
-httpServer.listen(3000);
+httpsServer.listen(3000);
 
