@@ -37,7 +37,7 @@ io.on('connection', client =>
 
     client.on('join_game', (username, gameCode) => 
     {
-        let rooms = Object.values(clientRooms);
+        let rooms = Object.values(Game.rooms);
         if(rooms.includes(gameCode))
         {
             let numUsers = io.sockets.adapter.rooms.get(gameCode).size;
