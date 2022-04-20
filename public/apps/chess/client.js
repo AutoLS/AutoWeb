@@ -1,4 +1,4 @@
-const socket = io(`https://${window.location.hostname}:3000`);
+const socket = io(`${window.location.protocol}//${window.location.hostname}:3000`)
 
 //Global data
 const urlData = Qs.parse(location.search, {ignoreQueryPrefix: true});
@@ -22,6 +22,10 @@ const rematchMessageModal =
 new bootstrap.Modal(document.querySelector('#rematch-message-box'), {
     keyboard: false
 });
+const checkmateMessageModal = 
+new bootstrap.Modal(document.querySelector('#checkmate-message-box'), {
+    keyboard: false
+});
 const resignButton = document.querySelector('#resign-button');
 const drawButton = document.querySelector('#draw-button');
 const rematchButton = document.querySelector('#rematch-button');
@@ -36,7 +40,7 @@ function validUsername()
 {
     if(urlData.username === undefined)
     {
-        location.href = `https://${window.location.hostname}/apps/chess/index.html`;
+        location.href = `${window.location.protocol}//${window.location.hostname}/apps/chess/index.html`;
     }
 }
 
@@ -99,6 +103,10 @@ document.querySelector('#accept-rematch-button').addEventListener('click', () =>
     socket.emit('accept_rematch', urlData.username, game.color);
     writeLog('You accepted the rematch request, resetting game.');
     rematchMessageModal.hide();
+});
+
+document.querySelector('#close-checkmate-button').addEventListener('click', () => {
+    checkmateMessageModal.hide();
 });
 
 socket.on('show_game_code', (room) => {
@@ -245,6 +253,12 @@ function updateStatus()
 socket.on('player_move', gameState => {
     game = gameState;
     updateStatus();
+});
+
+socket.on('checkmate', response => {
+    document.querySelector('#checkmate-message-title').innerHTML = response.title;
+    document.querySelector('#checkmate-message-text').innerHTML = response.body;
+    checkmateMessageModal.show();
 });
 
 socket.on('draw_request', username => {

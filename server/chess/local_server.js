@@ -75,6 +75,12 @@ io.on('connection', client =>
 
         let oppositeColor = color === 'w' ? 'b' : 'w';
         client.to(room).emit('player_move', Game.getState(room, oppositeColor));
+
+        if(moveResult.state.is_checkmate)
+        {
+            client.emit('checkmate', {title: 'Checkmate', body: 'Good job, you won!'});
+            client.to(room).emit('checkmate', {title: 'Checkmate', body: 'Gameover, you lost by checkmate :('});
+        }
     });
 
     client.on('resign', (username, color) => {
@@ -146,11 +152,11 @@ io.on('connection', client =>
             client.to(roomName).emit('player_disconnect', Game.getState(roomName, Game.games[roomName].first_color), client.data.username);
 
             let numUsers = io.sockets.adapter.rooms.get(roomName).size;
-
-            if(numUsers === 0)
+            if(numUsers === 1)
             {
-                console.log('Removed ' + roomName);
+                console.log('Removed game: ' + roomName);
                 delete Game.games[roomName];
+                console.log(Game.games);
             }
         }   
     });
