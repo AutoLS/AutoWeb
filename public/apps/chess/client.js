@@ -48,6 +48,11 @@ function validUsername()
 
 validUsername();
 
+socket.on('disconnect', (reason) => {
+    alert('Disconnected from server, going back to index.');
+    location.href = `${window.location.protocol}//${window.location.hostname}/apps/chess/index.html`;
+});
+
 createGameButton.addEventListener('click', () => {
     lobbyDiv.style.display = 'none';
     gameScreen.style.display = 'block';
