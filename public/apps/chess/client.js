@@ -12,7 +12,8 @@ const createGameButton = document.querySelector('#create-new-game');
 const gameCodeInput = document.querySelector('#game-code-input');
 const joinGameButton = document.querySelector('#join-game');
 const drawMessageModal = new bootstrap.Modal(document.querySelector('#draw-message-box'), {
-    keyboard: false
+    keyboard: false,
+    backdrop: 'static',
 });
 const resignMessageModal = 
 new bootstrap.Modal(document.querySelector('#resign-message-box'), {
@@ -20,7 +21,8 @@ new bootstrap.Modal(document.querySelector('#resign-message-box'), {
 });
 const rematchMessageModal = 
 new bootstrap.Modal(document.querySelector('#rematch-message-box'), {
-    keyboard: false
+    keyboard: false,
+    backdrop: 'static'
 });
 const checkmateMessageModal = 
 new bootstrap.Modal(document.querySelector('#checkmate-message-box'), {
@@ -64,11 +66,13 @@ resignButton.addEventListener('click', () => {
 drawButton.addEventListener('click', () => {
     socket.emit('draw_request', urlData.username, gameCode);
     writeLog('You initiated a draw request.');
+    drawButton.style.display = 'none';
 });
 
 rematchButton.addEventListener('click', () => {
     socket.emit('rematch_request', urlData.username);
     writeLog('You initiated a rematch request.');
+    rematchButton.style.display = 'none';
 });
 
 document.querySelector('#decline-resign-button').addEventListener('click', () => {
@@ -267,12 +271,19 @@ socket.on('draw_request', username => {
     drawMessageModal.show();
 });
 
+socket.on('decline_draw', () => {
+    drawButton.style.display = 'inline';
+});
+
+socket.on('decline_rematch', () => {
+    rematchButton.style.display = 'inline';
+});
+
 socket.on('rematch_request', username => {
     document.querySelector('#rematch-message-title').innerHTML = 'Rematch request';
     document.querySelector('#rematch-message-text').innerHTML = username + ' has initiated a rematch request, will you accept?';
     rematchMessageModal.show();
 });
-
 
 socket.on('player_disconnect', (gameState, username) => {
     alert(`${username} has abandoned the game. Resetting the game.`);

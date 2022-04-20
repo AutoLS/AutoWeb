@@ -100,6 +100,7 @@ io.on('connection', client =>
     });
 
     client.on('decline_draw', username => {
+        client.to(Game.rooms[client.id]).emit('decline_draw');
         client.to(Game.rooms[client.id]).emit('message', username + ' has declined the draw request.');
     });
 
@@ -115,6 +116,7 @@ io.on('connection', client =>
     });
 
     client.on('decline_rematch', username => {
+        client.to(Game.rooms[client.id]).emit('decline_rematch');
         client.to(Game.rooms[client.id]).emit('message', username + ' has declined the rematch request.');
     });
 
