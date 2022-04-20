@@ -2,6 +2,7 @@ import { Chess } from 'chess.js';
 import { Server } from 'socket.io';
 import * as https from 'https';
 import * as fs from 'fs';
+import * as Game from './game.js';
 
 // NOTE: For ssh
 const options = {
@@ -16,25 +17,6 @@ const io = new Server(httpsServer, {
     },
 });
 
-const clientRooms = {};
-const chessGames = {};
-
-function makeGameState(roomName, color)
-{
-    let gameState = {
-        turn: chessGames[roomName].turn(),
-        color: color,
-        fen: chessGames[roomName].fen(),
-        pgn: chessGames[roomName].pgn(),
-        is_checkmate: chessGames[roomName].in_checkmate(),
-        is_draw: chessGames[roomName].in_draw(),
-        is_check: chessGames[roomName].in_check(),
-        is_gameover: chessGames[roomName].game_over(),
-    };
-
-    return gameState;
-}
-
 io.on('connection', client => 
 {
     client.on('new_game', (username) => 
@@ -42,11 +24,11 @@ io.on('connection', client =>
         console.log(username + ' created a new game.')
         client.data.username = username;
         let roomName = username + '_' + client.id.slice(0, 10);
-        clientRooms[client.id] = roomName;
-        chessGames[roomName] = new Chess();
+        Game.createNewGame(roomName, client.id);
+
         client.emit('show_game_code', roomName);
 
-        let gameState = makeGameState(roomName, 'w');
+        let gameState = Game.getState(roomName, Game.games[roomName].first_color);
         client.emit('new_game', gameState);
         
         client.join(roomName);
@@ -63,8 +45,18 @@ io.on('connection', client =>
             {
                 client.join(gameCode);
                 client.data.username = username;
-                clientRooms[client.id] = gameCode;
-                let gameState = makeGameState(gameCode, 'b');
+                Game.rooms[client.id] = gameCode;
+                let gameState;
+                let color = Game.games[gameCode].first_color;
+                if(color === 'b')
+                {
+                    gameState = Game.getState(gameCode, 'w');
+                }
+                else
+                {
+                    gameState = Game.getState(gameCode, 'b');
+                }
+
                 client.emit('join_game_success', gameState);
                 client.emit('show_game_code', gameCode);
 
@@ -84,17 +76,63 @@ io.on('connection', client =>
 
     client.on('on_move', (color, source, target, room) => 
     {
-        let move = chessGames[room].move({
-            from: source,
-            to: target,
-            promotion: 'q'
-        });
-
-        let gameState = makeGameState(room, color);
-        client.emit('on_move', gameState, move);
+        let moveResult = Game.makeMove(source, target, room, color);
+        client.emit('on_move', moveResult.state, moveResult.move);
 
         let oppositeColor = color === 'w' ? 'b' : 'w';
-        client.to(room).emit('player_move', makeGameState(room, oppositeColor))
+        client.to(room).emit('player_move', Game.getState(room, oppositeColor));
+    });
+
+    client.on('resign', (username, color) => {
+        let room = Game.rooms[client.id];
+        client.to(room).emit('message', username + ' has resigned, resetting game.');
+
+        Game.games[room].state.reset();
+        let oppositeColor = color === 'w' ? 'b' : 'w';
+
+        client.emit('new_game', Game.getState(room, oppositeColor));
+        client.to(room).emit('new_game', Game.getState(room, color));
+    });
+
+    client.on('draw_request', (username, roomName) => {
+        client.to(roomName).emit('draw_request', username);
+        client.to(roomName).emit('message', username + ' has initiated a draw request.');
+    });
+
+    client.on('decline_draw', username => {
+        client.to(Game.rooms[client.id]).emit('message', username + ' has declined the draw request.');
+    });
+
+    client.on('accept_draw', (username, color) => {
+        let room = Game.rooms[client.id];
+        client.to(room).emit('message', username + ' has accepted the draw request. Resetting game.');
+
+        Game.games[room].state.reset();
+        let oppositeColor = color === 'w' ? 'b' : 'w';
+
+        client.emit('new_game', Game.getState(room, oppositeColor));
+        client.to(room).emit('new_game', Game.getState(room, color));
+    });
+
+    client.on('decline_rematch', username => {
+        client.to(Game.rooms[client.id]).emit('message', username + ' has declined the rematch request.');
+    });
+
+    client.on('accept_rematch', (username, color) => {
+        let room = Game.rooms[client.id];
+        client.to(room).emit('message', username + ' has accepted the rematch request. Resetting game.');
+
+        Game.games[room].state.reset();
+        let oppositeColor = color === 'w' ? 'b' : 'w';
+
+        client.emit('new_game', Game.getState(room, oppositeColor));
+        client.to(room).emit('new_game', Game.getState(room, color));
+    });
+
+    client.on('rematch_request', username => {
+        let room = Game.rooms[client.id];
+        client.to(room).emit('rematch_request', username);
+        client.to(room).emit('message', username + ' has initiated a rematch request.');
     });
 
     client.on('message', data => 
@@ -104,21 +142,21 @@ io.on('connection', client =>
 
     client.on('disconnecting', () => 
     {
-        let roomName = clientRooms[client.id];
+        let roomName = Game.rooms[client.id];
         
         if(roomName)
         {
-            chessGames[roomName].reset();
-            delete clientRooms[client.id];
-            client.to(roomName).emit('player_disconnect', makeGameState(roomName, 'w'), client.data.username);
+            Game.games[roomName].state.reset();
+            delete Game.rooms[client.id];
+            client.to(roomName).emit('player_disconnect', Game.getState(roomName, Game.getRandomColor()), client.data.username);
 
             let numUsers = io.sockets.adapter.rooms.get(roomName).size;
 
             if(numUsers === 0)
             {
-                delete chessGames[roomName];
+                delete Game.games[roomName];
             }
-        }   
+        } 
     });
 });
 

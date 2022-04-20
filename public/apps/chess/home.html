@@ -25,12 +25,19 @@
         <div id="game-screen" class="m-3" style="display: none;">
             <h3 id="game-code-display"></h3>
             <div id="game-board" style="width: 500px"></div>
-            <label>Status:</label>
-            <div id="status"></div>
-            <label>FEN:</label>
-            <div id="fen"></div>
-            <label>PGN:</label>
-            <div id="pgn"></div>
+            <div class="my-3" role="group">
+                <button id="resign-button" type="button" class="btn btn-danger">Resign</button>
+                <button id="draw-button" type="button" class="btn btn-warning">Draw</button>
+                <button id="rematch-button" type="button" class="btn btn-primary" style="display: none;">Rematch</button>
+            </div>
+            <div class="border overflow-auto p-2" style="width: 500px; height: 150px;">
+                <label>Status:</label>
+                <div id="status"></div>
+                <label>FEN:</label>
+                <div id="fen"></div>
+                <label>PGN:</label>
+                <div id="pgn"></div>
+            </div>
             <div class="border" style="width: 500px; height: 200px;">
                 <div id="chat-box" class="overflow-auto p-3 h-75">
                     <ul id="chat-log" class="list-unstyled"></ul>
@@ -42,10 +49,57 @@
             </div>
         </div>
 
+        <div class="modal fade" id="draw-message-box" tabindex="-1" role="dialog" aria-labelledby="drawMessage" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="draw-message-title"></h5>
+                    </div>
+                    <div class="modal-body" id="draw-message-text"></div>
+                    <div class="modal-footer">
+                        <button id="decline-draw-button" type="button" class="btn btn-secondary" data-dismiss="modal">Decline</button>
+                        <button id="accept-draw-button" type="button" class="btn btn-primary">Accept</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="resign-message-box" tabindex="-1" role="dialog" aria-labelledby="resignMessage" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="resign-message-title">Resign confirm</h5>
+                    </div>
+                    <div class="modal-body" id="resign-message-text">Are you sure you want to resign?</div>
+                    <div class="modal-footer">
+                        <button id="decline-resign-button" type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                        <button id="accept-resign-button" type="button" class="btn btn-primary">Yes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="rematch-message-box" tabindex="-1" role="dialog" aria-labelledby="rematchMessage" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="rematch-message-title"></h5>
+                    </div>
+                    <div class="modal-body" id="rematch-message-text"></div>
+                    <div class="modal-footer">
+                        <button id="decline-rematch-button" type="button" class="btn btn-secondary" data-dismiss="modal">Decline</button>
+                        <button id="accept-rematch-button" type="button" class="btn btn-primary">Accept</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <script src="/socket.io/socket.io.js"></script>
         <script src="https://code.jquery.com/jquery-3.5.1.min.js"
         integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2"
         crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
         <script src="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.js"
         integrity="sha384-8Vi8VHwn3vjQ9eUHUxex3JSN/NFqUg3QbPyX8kWyb93+8AC/pPWTzj+nHtbC5bxD"
         crossorigin="anonymous"></script>

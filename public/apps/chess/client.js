@@ -1,4 +1,4 @@
-const socket = io(`https://${window.location.hostname}:3000`);
+const socket = io(`http://${window.location.hostname}:3000`);
 
 //Global data
 const urlData = Qs.parse(location.search, {ignoreQueryPrefix: true});
@@ -11,6 +11,20 @@ const welcomeHeader = document.querySelector('#welcome-message');
 const createGameButton = document.querySelector('#create-new-game');
 const gameCodeInput = document.querySelector('#game-code-input');
 const joinGameButton = document.querySelector('#join-game');
+const drawMessageModal = new bootstrap.Modal(document.querySelector('#draw-message-box'), {
+    keyboard: false
+});
+const resignMessageModal = 
+new bootstrap.Modal(document.querySelector('#resign-message-box'), {
+    keyboard: false
+});
+const rematchMessageModal = 
+new bootstrap.Modal(document.querySelector('#rematch-message-box'), {
+    keyboard: false
+});
+const resignButton = document.querySelector('#resign-button');
+const drawButton = document.querySelector('#draw-button');
+const rematchButton = document.querySelector('#rematch-button');
 const $status = $('#status');
 const $fen = $('#fen');
 const $pgn = $('#pgn');
@@ -22,7 +36,7 @@ function validUsername()
 {
     if(urlData.username === undefined)
     {
-        location.href = `https://${window.location.hostname}/apps/chess/index.html`;
+        location.href = `http://${window.location.hostname}/apps/chess/index.html`;
     }
 }
 
@@ -37,6 +51,54 @@ createGameButton.addEventListener('click', () => {
 joinGameButton.addEventListener('click', () => {
     gameCode = gameCodeInput.value;
     socket.emit('join_game', urlData.username, gameCode);
+});
+
+resignButton.addEventListener('click', () => {
+    resignMessageModal.show();
+});
+
+drawButton.addEventListener('click', () => {
+    socket.emit('draw_request', urlData.username, gameCode);
+    writeLog('You initiated a draw request.');
+});
+
+rematchButton.addEventListener('click', () => {
+    socket.emit('rematch_request', urlData.username);
+    writeLog('You initiated a rematch request.');
+});
+
+document.querySelector('#decline-resign-button').addEventListener('click', () => {
+    resignMessageModal.hide();
+});
+
+document.querySelector('#accept-resign-button').addEventListener('click', () => {
+    socket.emit('resign', urlData.username, game.color);
+    writeLog('You resigned, resetting game.');
+    resignMessageModal.hide();
+});
+
+document.querySelector('#decline-draw-button').addEventListener('click', () => {
+    socket.emit('decline_draw', urlData.username);
+    writeLog('You declined the draw request.');
+    drawMessageModal.hide();
+});
+
+document.querySelector('#accept-draw-button').addEventListener('click', () => {
+    socket.emit('accept_draw', urlData.username, game.color);
+    writeLog('You accepted the draw request. Resetting game.');
+    drawMessageModal.hide();
+});
+
+document.querySelector('#decline-rematch-button').addEventListener('click', () => {
+    socket.emit('decline_rematch', urlData.username);
+    writeLog('You declined the rematch request.');
+    rematchMessageModal.hide();
+});
+
+document.querySelector('#accept-rematch-button').addEventListener('click', () => {
+    socket.emit('accept_rematch', urlData.username, game.color);
+    writeLog('You accepted the rematch request, resetting game.');
+    rematchMessageModal.hide();
 });
 
 socket.on('show_game_code', (room) => {
@@ -105,7 +167,7 @@ let game;
 
 function onDragStart (source, piece, position, orientation) 
 {
-    if(game.is_gameover) return false;
+    if(game.is_gameover || game.is_draw) return false;
 
     if((game.turn === 'w' && game.color === 'b') || 
        (game.turn === 'b' && game.color === 'w')) 
@@ -132,7 +194,7 @@ function onSnapEnd()
     board.position(game.fen);
 }
 
-function updateStatus () 
+function updateStatus() 
 {
     let status = '';
   
@@ -145,9 +207,15 @@ function updateStatus ()
     if(game.is_checkmate) 
     {
         status = 'Game over, ' + moveColor + ' is in checkmate.';
+        rematchButton.style.display = 'inline';
+        resignButton.style.display = 'none';
+        drawButton.style.display = 'none';
     } 
     else if(game.is_draw) {
         status = 'Game over, drawn position';
+        rematchButton.style.display = 'inline';
+        resignButton.style.display = 'none';
+        drawButton.style.display = 'none';
     }
     else 
     {
@@ -164,17 +232,7 @@ function updateStatus ()
     $pgn.html(game.pgn);
 
     board.position(game.fen);
-}
-
-socket.on('player_move', gameState => {
-    game = gameState;
-    updateStatus();
-});
-
-socket.on('player_disconnect', (gameState, username) => {
-    alert(`${username} has abandoned the game. Resetting the game.`);
-    game = gameState;
-    if(gameState.color === 'b')
+    if(game.color === 'b')
     {
         board.orientation('black');
     }
@@ -182,13 +240,38 @@ socket.on('player_disconnect', (gameState, username) => {
     {
         board.orientation('white');
     }
-    
+}
+
+socket.on('player_move', gameState => {
+    game = gameState;
+    updateStatus();
+});
+
+socket.on('draw_request', username => {
+    document.querySelector('#draw-message-title').innerHTML = 'Draw request';
+    document.querySelector('#draw-message-text').innerHTML = username + ' has initiated a draw request, will you accept?';
+    drawMessageModal.show();
+});
+
+socket.on('rematch_request', username => {
+    document.querySelector('#rematch-message-title').innerHTML = 'Rematch request';
+    document.querySelector('#rematch-message-text').innerHTML = username + ' has initiated a rematch request, will you accept?';
+    rematchMessageModal.show();
+});
+
+
+socket.on('player_disconnect', (gameState, username) => {
+    alert(`${username} has abandoned the game. Resetting the game.`);
+    game = gameState;
     updateStatus();
 });
 
 socket.on('new_game', (gameState) => {
-   game = gameState;
-   updateStatus();
+    resignButton.style.display = 'inline';
+    drawButton.style.display = 'inline';
+    rematchButton.style.display = 'none';
+    game = gameState;
+    updateStatus();
 });
 
 socket.on('join_game_success', (gameState) => {
@@ -197,14 +280,6 @@ socket.on('join_game_success', (gameState) => {
     updateStatus();
     lobbyDiv.style.display = 'none';
     gameScreen.style.display = 'block';
-    if(gameState.color === 'b')
-    {
-        board.orientation('black');
-    }
-    else
-    {
-        board.orientation('white');
-    }
 });
 
 socket.on('join_game_failure', () => {
