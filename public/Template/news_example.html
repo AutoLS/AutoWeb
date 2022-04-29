@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Template Example</title>
+        <meta name="author" content="AutoLs">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://kit.fontawesome.com/92225220cd.js" crossorigin="anonymous"></script>
+        <script src="https://cdn.tailwindcss.com"></script>
+    </head>
+    <body>
+        <header class="w-full p-5 lg:m-auto lg:w-[1024px]">
+            <div class="flex justify-between border-b-2 border-black pb-2">
+                <h1 class="font-bold text-4xl">ExampleTemplate</h1>
+                <div class="flex order-last">
+                    <button class="mr-2 mt-1"><i class="fa-solid fa-magnifying-glass"></i></button>
+                    <svg class="mt-3" width="65" height="23" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M25.089 6.709c-.47-.496-.974-.798-1.322-.798h-.313v-.275h.261c.121 0 1.548.058 1.687.058.227 0 .886-.058 1.026-.058h.278l6.618 7.345V7.187c0-.921-.4-1.276-1.407-1.276h-.296v-.275h.313c.035 0 1.529.058 1.65.058.173 0 1.164-.058 1.355-.058h.192l.017.275c-.922.071-1.165.32-1.165 1.135v9.16h-.312l-7.904-8.77v6.6c0 1.384.314 1.756 1.46 1.756h.295v.296h-.331c-.243 0-1.441-.06-1.72-.06-.156 0-1.269.06-1.512.06h-.279v-.296c1.166-.107 1.41-.302 1.41-1.153v-7.93h-.001zm11.98.106c0-.691-.261-.904-1.079-.904h-.26v-.275h.678c.47 0 3.008.058 3.026.058.364 0 2.777-.058 3.296-.058h.695l.035 2.277h-.27c-.053-1.188-.58-1.667-1.795-1.667h-2.43v4.026h2.1c.816 0 1.268-.39 1.389-1.225l.31.018v3.178h-.293c-.138-.993-.642-1.383-1.857-1.383h-1.666v3.672c0 .603.296.905.885.905h1.736c1.126 0 1.944-.515 2.43-1.58h.314l-.731 2.23c-.505 0-2.898-.058-3.696-.058-.539 0-3.13.04-3.722.058h-.452v-.295h.278c.818-.017 1.08-.23 1.08-.923V6.815zm16.701 9.41h-.487l-1.984-5.511-2.035 5.512h-.47L45.4 6.975c-.26-.71-.505-.993-.957-1.08v-.26h.296c.191 0 1.149.059 1.375.059.191 0 1.182-.058 1.391-.058h.314v.275c-.505.019-.714.16-.714.443 0 .16.052.39.14.639l2.383 6.557 1.357-3.74-.887-2.516c-.383-1.081-.714-1.364-1.55-1.383v-.275h.28c.243 0 1.496.058 1.793.058.242 0 1.495-.058 1.773-.058h.417v.275h-.417c-.574 0-.852.142-.852.443 0 .16.07.444.174.727l2.314 6.522 1.827-5.53c.226-.709.33-1.17.33-1.453 0-.496-.243-.71-.782-.71h-.313v-.274h.087c.243 0 .851.058 1.217.058.173 0 .851-.058 1.18-.058h.123v.275c-.436.125-.66.443-1.007 1.525l-2.923 8.79zm4.01-2.563c.278.688.52 1.008.988 1.361.59.46 1.37.69 2.237.69 1.491 0 2.497-.796 2.497-1.946 0-.85-.486-1.31-2.282-2.175-1.74-.85-2.174-1.274-2.538-1.628-.537-.584-.762-1.114-.762-1.822 0-1.627 1.3-2.704 3.265-2.704.592 0 1.236.088 1.933.264.278.07.557.106.714.106.138 0 .209-.035.26-.153h.3l.034 2.229h-.247c-.156-.531-.26-.76-.487-1.05-.488-.585-1.254-.903-2.237-.903-1.248 0-2.064.601-2.064 1.504 0 .778.47 1.22 2.134 1.998 2.134 1.008 3.426 1.911 3.426 3.573 0 1.91-1.537 3.2-3.807 3.2a8.04 8.04 0 0 1-1.838-.229 3.676 3.676 0 0 0-.624-.089c-.209 0-.277.036-.415.2h-.295l-.035-.248c-.118-.7-.258-1.398-.418-2.09l.261-.089zM3.97 9.732c-.262 0-.51.06-.73.168-.587.291-.957.89-.955 1.546 0 .946.755 1.714 1.684 1.714.931 0 1.684-.768 1.684-1.714 0-.947-.753-1.715-1.684-1.715zm7.259 0c-.93 0-1.685.767-1.685 1.714 0 .946.754 1.714 1.685 1.714.93 0 1.684-.768 1.684-1.714 0-.947-.755-1.715-1.684-1.715z"></path><path d="M18.47 14.875c-1.862 0-3.37-1.535-3.37-3.43 0-1.893 1.508-3.428 3.37-3.428 1.596 0 2.932 1.132 3.28 2.65h-1.78a1.68 1.68 0 0 0-1.5-.936c-.932 0-1.686.768-1.686 1.715 0 .946.754 1.714 1.685 1.714a1.68 1.68 0 0 0 1.502-.94l1.783-.017c-.339 1.53-1.68 2.672-3.285 2.672zm-7.241 0c-1.853 0-3.356-1.522-3.369-3.405l-.04-6.016h1.704l.01 3.228c.499-.396 1.077-.665 1.695-.665 1.86 0 3.368 1.535 3.368 3.429s-1.509 3.429-3.368 3.429zm-5.546 0l-.007-.859c-.382.389-1.043.859-1.824.859-1.86 0-3.251-1.535-3.251-3.43 0-1.893 1.508-3.428 3.368-3.428.29 0 .573.037.843.108 1.453.38 2.526 1.723 2.526 3.32v.01l.02 3.42H5.682zM11.229.017C5.027.017 0 5.134 0 11.446s5.027 11.43 11.229 11.43c6.2 0 11.228-5.118 11.228-11.43 0-6.312-5.028-11.429-11.228-11.429z"></path>
+                    </svg>
+                </div>
+            </div>
+            <div class="flex justify-between mt-2 w-full">
+                <div class="flex flex-row">
+                    <a href="#" class="hover:text-gray-400 text-base">Politics</a>
+                    <a href="#" class="hover:text-gray-400 text-base ml-5">Sports</a>
+                    <a href="#" class="hover:text-gray-400 text-base ml-5">Science</a>
+                    <a href="#" class="hover:text-gray-400 text-base ml-5">Podcasts</a>
+                    <a href="#" class="hover:text-gray-400 text-base ml-5">Video</a>
+                </div>
+                <div class="flex">
+                    <h3 class="text-gray-400 mr-1">Latest</h3>
+                    <a href="#" class="hover:text-gray-400 text-base">Polls</a>
+                </div>
+            </div>
+        </header>
+        <div id="wrapper" class="w-full px-5 lg:m-auto lg:w-[1024px]">
+            <div id="content" class="lg:grid lg:grid-cols-12">
+                <div id="primary" class="lg:col-span-8 lg:border-r border-gray-300 pr-3">
+                    <div class="lg:grid lg:grid-cols-3 lg:gap-4">
+                        <div class="lg:col-span-2 lg:border-r lg:pr-5 border-gray-300">
+                            <div class="border-b border-gray-300">
+                                <div>
+                                    <img src="http://via.placeholder.com/640x360" class="max-h-full max-w-full" alt="Sample image">
+                                </div>
+                                <div class="my-3">
+                                    <a href="#" class="text-gray-300 transition duration-300 border-b border-transparent hover:border-gray-300">LOREM IPSUM</a>
+                                    <div>
+                                        <a href="#" class="font-bold text-4xl transition duration-300 border-b border-transparent hover:border-gray-300">Lorem ipsum dolor sit amet, consectetur adipiscing elit</a>
+                                    </div>
+                                    <div class="mt-3">
+                                        By <a href="#" class="text-sm transition duration-300 border-b border-transparent hover:border-gray-300"> Auto</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="border-b border-gray-300">
+                                <div class="grid grid-cols-2 gap-2 py-5">
+                                    <div>
+                                        <a href="#" class="text-gray-300 transition duration-300 border-b border-transparent hover:border-gray-300">LOR</a>
+                                        <div>
+                                            <a href="#" class="font-bold text-xl transition duration-300 border-b border-transparent hover:border-gray-300">Lorem ipsum dolor sit amet, consectetur adipiscing elit</a>
+                                        </div>
+                                        <div class="mt-3">
+                                            By <a href="#" class="text-sm transition duration-300 border-b border-transparent hover:border-gray-300"> Auto</a>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <img src="https://placekitten.com/640/360" alt="Kitten">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="border-b border-gray-300">
+                                <div class="grid grid-cols-2 gap-2 py-5">
+                                    <div>
+                                        <a href="#" class="text-gray-300 transition duration-300 border-b border-transparent hover:border-gray-300">LOR</a>
+                                        <div>
+                                            <a href="#" class="font-bold text-xl transition duration-300 border-b border-transparent hover:border-gray-300">Lorem ipsum dolor sit amet, consectetur adipiscing elit</a>
+                                        </div>
+                                        <div class="mt-3">
+                                            By <a href="#" class="text-sm transition duration-300 border-b border-transparent hover:border-gray-300"> Auto</a>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <img src="https://loremflickr.com/640/360
+                                        " alt="placeholder">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="border-b border-gray-300">
+                                <div class="grid grid-cols-2 gap-2 py-5">
+                                    <div>
+                                        <a href="#" class="text-gray-300 transition duration-300 border-b border-transparent hover:border-gray-300">LOR</a>
+                                        <div>
+                                            <a href="#" class="font-bold text-xl transition duration-300 border-b border-transparent hover:border-gray-300">Lorem ipsum dolor sit amet, consectetur adipiscing elit</a>
+                                        </div>
+                                        <div class="mt-3">
+                                            By <a href="#" class="text-sm transition duration-300 border-b border-transparent hover:border-gray-300"> Auto</a>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <img src="https://placebeard.it/640x360" alt="placebeard">
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="grid grid-cols-2 gap-2 py-5">
+                                    <div>
+                                        <a href="#" class="text-gray-300 transition duration-300 border-b border-transparent hover:border-gray-300">LOR</a>
+                                        <div>
+                                            <a href="#" class="font-bold text-xl transition duration-300 border-b border-transparent hover:border-gray-300">Lorem ipsum dolor sit amet, consectetur adipiscing elit</a>
+                                        </div>
+                                        <div class="mt-3">
+                                            By <a href="#" class="text-sm transition duration-300 border-b border-transparent hover:border-gray-300"> Auto</a>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <img src="http://placeimg.com/640/360/tech" alt="placebeard">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-3 lg:mt-0 lg:col-span-1">
+                            <div class="text-gray-400 border-b border-gray-300 pb-2">THE LATEST</div>
+                            <div class="py-3 border-b border-gray-300">
+                                <h5 class="text-gray-400 text-sm">7:24PM</h5>
+                                <a href="#" class="font-bold text-xl transition duration-300 border-b border-transparent hover:border-gray-300">Lorem ipsum dolor sit amet</a>
+                            </div>
+                            <div class="py-3 border-b border-gray-300">
+                                <h5 class="text-gray-400 text-sm">6:24PM</h5>
+                                <a href="#" class="font-bold text-xl transition duration-300 border-b border-transparent hover:border-gray-300">Lorem ipsum dolor sit amet, consectetur adipiscing elit</a>
+                            </div>
+                            <div class="py-3 border-b border-gray-300">
+                                <h5 class="text-gray-400 text-sm">5:24PM</h5>
+                                <a href="#" class="font-bold text-xl transition duration-300 border-b border-transparent hover:border-gray-300">Lorem ipsum dolor sit amet, consectetur adipiscing elit</a>
+                            </div>
+                            <div class="py-3 border-b border-gray-300">
+                                <h5 class="text-gray-400 text-sm">4:24PM</h5>
+                                <a href="#" class="font-bold text-xl transition duration-300 border-b border-transparent hover:border-gray-300">sed do eiusmod tempor incididunt ut labore et dolore magna aliqua</a>
+                            </div>
+                            <div class="py-3 border-b border-gray-300">
+                                <h5 class="text-gray-400 text-sm">3:24PM</h5>
+                                <a href="#" class="font-bold text-xl transition duration-300 border-b border-transparent hover:border-gray-300">Orci dapibus ultrices in iaculis nunc. Ornare lectus sit amet est placerat in egestas erat imperdiet</a>
+                            </div>
+                            <div class="py-3 border-b border-gray-300">
+                                <h5 class="text-gray-400 text-sm">2:24PM</h5>
+                                <a href="#" class="font-bold text-xl transition duration-300 border-b border-transparent hover:border-gray-300">In nulla posuere sollicitudin aliquam ultrices sagittis orci a scelerisque</a>
+                            </div>
+                            <div class="py-3 border-b border-gray-300">
+                                <h5 class="text-gray-400 text-sm">1:24PM</h5>
+                                <a href="#" class="font-bold text-xl transition duration-300 border-b border-transparent hover:border-gray-300">Non curabitur gravida arcu ac tortor. Etiam sit amet nisl purus</a>
+                            </div>
+                            <div class="py-3">
+                                <div class="text-center">
+                                    <button class="border border-black p-2 bg-white text-black transition duration-300 hover:text-white hover:bg-black">All stories</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="more-stories" class="mt-10">
+                        <div class="border-b border-gray-300 text-gray-400"><h1>MORE STORIES</h1></div>
+                        <div class="grid lg:grid-cols-3 gap-4 py-5">
+                            <div class="border-b border-gray-300 lg:border-b-0">
+                                <img src="https://placebear.com/640/360">
+                                <a href="#" class="text-gray-300 transition duration-300 border-b border-transparent hover:border-gray-300">LOREM IPSUM</a>
+                                <div>
+                                    <a href="#" class="font-bold transition duration-300 border-b border-transparent hover:border-gray-300">Lorem ipsum dolor sit amet, consectetur adipiscing elit</a>
+                                </div>
+                                <div class="mb-5 lg:mt-5">
+                                    By <a href="#" class="text-sm transition duration-300 border-b border-transparent hover:border-gray-300"> Auto</a>
+                                </div>
+                            </div>
+                            <div class="border-b border-gray-300 lg:border-b-0">
+                                <img src="https://www.stevensegallery.com/640/360">
+                                <a href="#" class="text-gray-300 transition duration-300 border-b border-transparent hover:border-gray-300">LOREM IPSUM</a>
+                                <div>
+                                    <a href="#" class="font-bold transition duration-300 border-b border-transparent hover:border-gray-300">Lorem ipsum dolor sit amet, consectetur adipiscing elit</a>
+                                </div>
+                                <div class="mb-5 lg:mt-5">
+                                    By <a href="#" class="text-sm transition duration-300 border-b border-transparent hover:border-gray-300"> Auto</a>
+                                </div>
+                            </div>
+                            <div class="border-b border-gray-300 lg:border-b-0">
+                                <img src="http://placeimg.com/640/360/any">
+                                <a href="#" class="text-gray-300 transition duration-300 border-b border-transparent hover:border-gray-300">LOREM IPSUM</a>
+                                <div>
+                                    <a href="#" class="font-bold transition duration-300 border-b border-transparent hover:border-gray-300">Lorem ipsum dolor sit amet, consectetur adipiscing elit</a>
+                                </div>
+                                <div class="mb-5 lg:mt-5">
+                                    By <a href="#" class="text-sm transition duration-300 border-b border-transparent hover:border-gray-300"> Auto</a>
+                                </div>
+                            </div>
+                            <div class="border-b border-gray-300 lg:border-b-0">
+                                <img src="http://placeimg.com/640/360/animals">
+                                <a href="#" class="text-gray-300 transition duration-300 border-b border-transparent hover:border-gray-300">LOREM IPSUM</a>
+                                <div>
+                                    <a href="#" class="font-bold transition duration-300 border-b border-transparent hover:border-gray-300">Lorem ipsum dolor sit amet, consectetur adipiscing elit</a>
+                                </div>
+                                <div class="mb-5 lg:mt-5">
+                                    By <a href="#" class="text-sm transition duration-300 border-b border-transparent hover:border-gray-300"> Auto</a>
+                                </div>
+                            </div>
+                            <div class="border-b border-gray-300 lg:border-b-0">
+                                <img src="http://placeimg.com/640/360/architecture">
+                                <a href="#" class="text-gray-300 transition duration-300 border-b border-transparent hover:border-gray-300">LOREM IPSUM</a>
+                                <div>
+                                    <a href="#" class="font-bold transition duration-300 border-b border-transparent hover:border-gray-300">Lorem ipsum dolor sit amet, consectetur adipiscing elit</a>
+                                </div>
+                                <div class="mb-5 lg:mt-5">
+                                    By <a href="#" class="text-sm transition duration-300 border-b border-transparent hover:border-gray-300"> Auto</a>
+                                </div>
+                            </div>
+                            <div>
+                                <img src="https://picsum.photos/640/360">
+                                <a href="#" class="text-gray-300 transition duration-300 border-b border-transparent hover:border-gray-300">LOREM IPSUM</a>
+                                <div>
+                                    <a href="#" class="font-bold transition duration-300 border-b border-transparent hover:border-gray-300">Lorem ipsum dolor sit amet, consectetur adipiscing elit</a>
+                                </div>
+                                <div class="mb-5 lg:mt-5">
+                                    By <a href="#" class="text-sm transition duration-300 border-b border-transparent hover:border-gray-300"> Auto</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-right"><a href="#" class="hover:underline text-sm">MORE ></a></div>
+                    </div>
+                </div>
+                <div id="secondary" class="lg:col-span-4 lg:px-5">
+                    <div class="text-gray-400 border-b border-gray-300 pb-2">INTERACTIVES</div>
+                    <div class="py-3 border-b border-gray-300">
+                        <h2 class="text-lg font-bold"><a href="#" class="transition duration-300 border-b border-transparent hover:border-gray-300">Lorem Ipsum Dolor Sit Amet?</a></h1>
+                        <p class="text-gray-300 text-sm">UPDATED 3 HOURS AGO</p>
+                        <img src="https://fakeimg.pl/640x360">
+                        <div class="text-center mt-3 mb-10">
+                            <button class="border border-black p-2 bg-white text-black transition duration-300 hover:text-white hover:bg-black">See all approved polls</button>
+                        </div>
+                    </div>
+                    <div class="py-3 border-b border-gray-300">
+                        <h2 class="text-lg font-bold"><a href="#" class="transition duration-300 border-b border-transparent hover:border-gray-300">Lorem Ipsum Dolor Sit Amet?</a></h1>
+                        <p class="text-gray-300 text-sm">UPDATED 3 HOURS AGO</p>
+                        <img src="https://fakeimg.pl/640x360">
+                        <div class="text-center mt-3 mb-10">
+                            <button class="border border-black p-2 bg-white text-black transition duration-300 hover:text-white hover:bg-black">See all redistricting maps and updates</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-5 py-5 lg:border-t lg:border-gray-300">
+                <div class="relative w-full bg-white">
+                    <img src="https://loremflickr.com/1600/900">
+                    <div class="absolute top-1/2 left-1/2 translate-y-[-50%] translate-x-[-50%] z-10 flex min-w-[55%]">
+                        <button class="block border-0 rounded-full w-[80px] h-[80px] lg:w-[100px] lg:h-[100px] bg-no-repeat bg-center bg-[url(play-button-3.svg)] mr-5 hover:brightness-75"></button>
+                        <div>
+                            <h6 class="text-sm text-gray-300"><a href="#" class="transition duration-300 border-b border-transparent hover:border-gray-300">LOREM GILBA </a>| 6:30</h6>
+                            <h2 class="text-2xl font-bold">Lorem Ipsum Dolor Sit Amet</h1>
+                            <p>By <a href="#" class="transition duration-300 border-b border-transparent hover:border-gray-300">Auto</a></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex justify-between mt-3">
+                    <button class="border border-black p-2 bg-white text-black transition duration-300 hover:text-white hover:bg-black">Subscribe on YouTube</button>
+                    <button class="order-last border border-black p-2 bg-white text-black transition duration-300 hover:text-white hover:bg-black">All videos</button>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
