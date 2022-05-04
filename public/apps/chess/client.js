@@ -201,7 +201,8 @@ function highlightSquare(square)
 
 function onMouseoverSquare(square, piece)
 {
-    socket.emit('mouseover_square', square);
+    if(game.color === game.turn)
+        socket.emit('mouseover_square', square);
 }
 
 socket.on('mouseover_square', (square, moveData) => 
