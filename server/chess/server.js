@@ -74,6 +74,17 @@ io.on('connection', client =>
         }
     });
 
+    client.on('mouseover_square', (square) => 
+    {
+        let room = Game.rooms[client.id];
+        let game = Game.games[room];
+
+        let moveData = game.state.moves({square: square, verbose: true});
+        let moves = moveData.map(x => x.to);
+
+        client.emit('mouseover_square', square, moves);
+    });
+
     client.on('on_move', (color, source, target, room) => 
     {
         let moveResult = Game.makeMove(source, target, room, color);

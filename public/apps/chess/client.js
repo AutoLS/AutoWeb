@@ -3,6 +3,8 @@ const socket = io(`${window.location.protocol}//${window.location.hostname}:3000
 //Global data
 const urlData = Qs.parse(location.search, {ignoreQueryPrefix: true});
 let gameCode;
+var whiteSquareGrey = '#a9a9a9';
+var blackSquareGrey = '#696969';
 
 //Dom objects
 const lobbyDiv = document.querySelector('#lobby-screen');
@@ -50,7 +52,7 @@ validUsername();
 
 socket.on('disconnect', (reason) => {
     alert('Disconnected from server, going back to index.');
-    location.href = `${window.location.protocol}//${window.location.hostname}/apps/chess/index.html`;
+    location.href = `${window.location.protocol}//${window.location.hostname}:${window.location.port}/apps/chess/index.html`;
 });
 
 createGameButton.addEventListener('click', () => {
@@ -177,10 +179,48 @@ var config =
     position: 'start',
     onDragStart: onDragStart,
     onDrop: onDrop,
+    onMouseoutSquare: onMouseoutSquare,
+    onMouseoverSquare: onMouseoverSquare,
     onSnapEnd: onSnapEnd
 }
 const board = Chessboard('game-board', config);
 let game;
+
+function highlightSquare(square)
+{
+    var $square = $('#game-board .square-' + square);
+
+    var background = whiteSquareGrey;
+    if ($square.hasClass('black-3c85d')) 
+    {
+        background = blackSquareGrey;
+    }
+
+    $square.css('background', background);
+}
+
+function onMouseoverSquare(square, piece)
+{
+    socket.emit('mouseover_square', square);
+}
+
+socket.on('mouseover_square', (square, moveData) => 
+{
+    let moves = moveData;
+    if(moves.length === 0) return;
+        
+    highlightSquare(square);
+
+    for(let i = 0; i < moves.length; ++i)
+    {
+        highlightSquare(moves[i]);
+    }
+});
+
+function onMouseoutSquare(square, piece) 
+{
+    $('#game-board .square-55d63').css('background', '');
+}
 
 function onDragStart (source, piece, position, orientation) 
 {
@@ -192,6 +232,7 @@ function onDragStart (source, piece, position, orientation)
         return false;
     }
 }
+
   
 function onDrop (source, target) 
 {
