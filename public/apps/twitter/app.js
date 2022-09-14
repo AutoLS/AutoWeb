@@ -30,7 +30,7 @@ async function post_tweet()
 
         const result = await fetch('/api/tweet', {
             method: 'POST',
-            //mode: 'cors',
+            mode: 'cors',
             cache: 'no-cache',
             headers: {
                 'Content-type': 'application/json'
