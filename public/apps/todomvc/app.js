@@ -197,17 +197,28 @@ function is_all_todos_completed()
 function toggle_complete_all_todos()
 {
     let children = todo_list.children;
+    let length = children.length;
     let result = is_all_todos_completed();
     if (result.complete)
     {
-        for(var i = 0; i < children.length; ++i)
+        for(var i = 0; i < length; ++i)
         {
             todos[i].complete = false;
-            let check_button = children[i].children[0];
-            check_button.innerHTML = "<i class=\"fa-regular fa-circle\"></i>";
-            let content = children[i].children[1];
-            content.classList.replace("text-neutral-300", "text-neutral-600");
-            content.classList.remove("line-through");
+            switch(selected_button)
+            {
+                case Todo_Menu_Buttons.Active:
+                    todo_list.removeChild(children[0]);
+                    break;
+                case Todo_Menu_Buttons.Completed:
+                    todo_list.removeChild(children[0]);
+                    break;
+                default:
+                    let check_button = children[i].children[0];
+                    check_button.innerHTML = "<i class=\"fa-regular fa-circle\"></i>";
+                    let content = children[i].children[1];
+                    content.classList.replace("text-neutral-300", "text-neutral-600");
+                    content.classList.remove("line-through");
+            }
         }
     }
     else
@@ -215,11 +226,30 @@ function toggle_complete_all_todos()
         for(const index of result.indicies)
         {
             todos[index].complete = true;
-            let check_button = children[index].children[0];
-            check_button.innerHTML = "<i class=\"fa-solid fa-circle\"></i>";
-            let content = children[index].children[1];
-            content.classList.replace("text-neutral-600", "text-neutral-300");
-            content.classList.add("line-through");       
+            switch(selected_button)
+            {
+                case Todo_Menu_Buttons.Active:
+                    todo_list.removeChild(children[0]);
+                    break;
+                case Todo_Menu_Buttons.All:
+                    let check_button = children[index].children[0];
+                    check_button.innerHTML = "<i class=\"fa-solid fa-circle\"></i>";
+                    let content = children[index].children[1];
+                    content.classList.replace("text-neutral-600", "text-neutral-300");
+                    content.classList.add("line-through");      
+            }
+        }
+
+        if(selected_button === Todo_Menu_Buttons.Completed)
+        {
+            todo_list.innerHTML = "";
+
+            todos.forEach((todo, index) => {
+                if(todo.complete)
+                {
+                    append_todo_node(todo, index);
+                }
+            });
         }
     }
 }
