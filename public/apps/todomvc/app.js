@@ -1,76 +1,164 @@
+const todo_control = document.querySelector("#todo-control");
 const todo_list = document.querySelector("#todo-list");
 const todo_input = document.querySelector("#todo-input");
+const todo_info = document.querySelector("#todo-info");
+const todo_menu = document.querySelector("#todo-menu");
+const todo_item_count = document.querySelector("#todo-item-count");
 const todo_complete_all_button = document.querySelector("#complete-all-todos");
+const todo_menu_all_button = document.querySelector("#todo-menu-all");
+const todo_menu_active_button = document.querySelector("#todo-menu-active");
+const todo_menu_completed_button = document.querySelector("#todo-menu-completed");
 
 todo_input.addEventListener("keyup", todo_enter);
 todo_complete_all_button.addEventListener("click", toggle_complete_all_todos);
 
 var todos = [];
 
+const Todo_Menu_Buttons = 
+{
+    All: 0,
+    Active: 1,
+    Completed: 2
+}
+
+var selected_button = Todo_Menu_Buttons.All;
+function switch_button(current_index)
+{
+    if(selected_button != current_index)
+    {
+        todo_menu.children[selected_button].classList.remove("border", "border-rose-300/25", "rounded", "px-2", "py-1");
+        selected_button = current_index;
+        todo_menu.children[selected_button].classList.add("border", "border-rose-300/25", "rounded", "px-2", "py-1");
+    }
+}
+todo_menu_all_button.addEventListener("click", e => 
+{
+    let index = Todo_Menu_Buttons.All;
+
+    switch_button(index);
+    todo_list.innerHTML = "";
+
+    todos.forEach((todo, index) => {
+        append_todo_node(todo, index);
+    });
+});
+todo_menu_active_button.addEventListener("click", e => 
+{
+    let index = Todo_Menu_Buttons.Active;
+
+    switch_button(index);
+    todo_list.innerHTML = "";
+
+    todos.forEach((todo, index) => {
+        if(!todo.complete)
+        {
+            append_todo_node(todo, index);
+        }
+    });
+});
+todo_menu_completed_button.addEventListener("click", e => 
+{
+    let index = Todo_Menu_Buttons.Completed;
+
+    switch_button(index);
+    todo_list.innerHTML = "";
+
+    todos.forEach((todo, index) => {
+        if(todo.complete)
+        {
+            append_todo_node(todo, index);
+        }
+    });
+});
+
+function append_todo_node(todo, todo_index)
+{
+    let todo_node = document.createElement("div");
+    //child.innerHTML = todo_input.value;
+    todo_node.classList.add("w-full", "border", "flex", "flex-row", "font-[\'Helvetica\']");
+
+    let check_button = document.createElement("button");
+    if(todo.complete) 
+        check_button.innerHTML = "<i class=\"fa-solid fa-circle\"></i>";
+    else 
+        check_button.innerHTML = "<i class=\"fa-regular fa-circle\"></i>";
+    
+    check_button.addEventListener('click', (e) => {
+        let id = todo_index;
+        todos[id].complete = !todos[id].complete;
+
+        switch(selected_button)
+        {
+            case Todo_Menu_Buttons.Active:
+                todo_list.removeChild(e.currentTarget.parentElement);
+                break;
+            case Todo_Menu_Buttons.Completed:
+                todo_list.removeChild(e.currentTarget.parentElement);
+                break;
+            default:
+                if(todos[id].complete) e.currentTarget.innerHTML = "<i class=\"fa-solid fa-circle\"></i>";
+                else e.currentTarget.innerHTML = "<i class=\"fa-regular fa-circle\"></i>";
+                update_todo_node(todos[id].complete, e.currentTarget.nextElementSibling);
+        }
+    });
+    check_button.classList.add("basis-1/12", "px-5");
+    
+    let todo_content = document.createElement("div");
+    todo_content.classList.add("basis-10/12", "p-3", "text-neutral-600", "text-2xl", "transition" , "ease-in", "duration-300");
+    todo_content.innerHTML = todo.body;
+    update_todo_node(todo.complete, todo_content);
+
+    let delete_button = document.createElement("button");
+    delete_button.innerHTML = "x";
+    delete_button.classList.add("basis-1/12", "px-5", "text-rose-300", "text-2xl", "invisible", "transition" , "ease-in", "duration-300", "hover:text-rose-600");
+    delete_button.addEventListener("click", e => {
+        let index = todo_index;
+        todos.splice(index, 1);
+        todo_item_count.innerHTML = todos.length + " item left";
+        if(todos.length <= 0)
+        {
+            todo_control.classList.add("shadow-xl");
+            todo_info.classList.replace("visible", "invisible");
+        } 
+        todo_list.removeChild(e.currentTarget.parentElement);
+    });
+
+    todo_node.appendChild(check_button);
+    todo_node.appendChild(todo_content);
+    todo_node.appendChild(delete_button);
+
+    todo_node.addEventListener("mouseover", e => {
+        e.currentTarget.children[2].classList.replace("invisible", "visible");
+    });
+    todo_node.addEventListener("mouseout", e => {
+        e.currentTarget.children[2].classList.replace("visible", "invisible");
+    });
+    
+    todo_list.appendChild(todo_node);
+}
+
 function todo_enter(e)
 {
-    if(e.key === "Enter" || e.keyCode === 13)
+    if((e.key === "Enter" || e.keyCode === 13) && todo_input.value != "")
     {
+        if(todos.length === 0)
+        {
+            todo_menu.children[selected_button].classList.remove("border", "border-rose-300/25", "rounded", "px-2", "py-1");
+            selected_button = Todo_Menu_Buttons.All;
+            todo_menu_all_button.classList.add("border", "border-rose-300/25", "rounded", "px-2", "py-1");
+        }
+
         let todo = {
-            name: todo_input.value,
+            body: todo_input.value,
             complete: false
         };
         todos.push(todo);
-
-        let todo_node = document.createElement("div");
-        //child.innerHTML = todo_input.value;
-        let class_styles = ["w-full", "border", "flex", "flex-row", "font-[\'Helvetica\']"];
-        class_styles.forEach(style => {
-            todo_node.classList.add(style);
-        });
-
-        let check_button = document.createElement("button");
-        check_button.innerHTML = "<i class=\"fa-regular fa-circle\"></i>";
-
-        check_button.addEventListener('click', (e) => {
-            let id = Array.from(todo_list.children).
-                     indexOf(e.currentTarget.parentElement) - 2;
-            todos[id].complete = !todos[id].complete;
-            if(todos[id].complete) e.currentTarget.innerHTML = "<i class=\"fa-solid fa-circle\"></i>";
-            else e.currentTarget.innerHTML = "<i class=\"fa-regular fa-circle\"></i>";
-            update_todo_node(todos[id].complete, e.currentTarget.nextElementSibling);
-        });
-        let button_styles = ["basis-1/12", "px-5"];
-        button_styles.forEach(style => {
-            check_button.classList.add(style);
-        });
         
-        let todo_content = document.createElement("div");
-        let todo_content_styles = ["basis-10/12", "p-3", "text-neutral-600", "text-2xl", "transition" , "ease-in", "duration-300"];
-        todo_content_styles.forEach(style => {
-            todo_content.classList.add(style);
-        });
-        todo_content.innerHTML = todo_input.value;
+        todo_control.classList.remove("shadow-xl");
+        todo_info.classList.replace("invisible", "visible");
+        todo_item_count.innerHTML = todos.length + " item left";
 
-        let delete_button = document.createElement("button");
-        delete_button.innerHTML = "x";
-        let delete_button_styles = ["basis-1/12", "px-5", "text-rose-300", "text-2xl", "invisible", "transition" , "ease-in", "duration-300", "hover:text-rose-600"];
-        delete_button_styles.forEach(style => {
-            delete_button.classList.add(style);
-        });
-        delete_button.addEventListener("click", e => {
-            let index = Array.from(todo_list.children).indexOf(e.currentTarget.parentElement);
-            todos.splice(index-2, 1);
-            todo_list.removeChild(e.currentTarget.parentElement);
-        });
-
-        todo_node.appendChild(check_button);
-        todo_node.appendChild(todo_content);
-        todo_node.appendChild(delete_button);
-
-        todo_node.addEventListener("mouseover", e => {
-            e.currentTarget.children[2].classList.replace("invisible", "visible");
-        });
-        todo_node.addEventListener("mouseout", e => {
-            e.currentTarget.children[2].classList.replace("visible", "invisible");
-        });
-        
-        todo_list.appendChild(todo_node);
+        append_todo_node(todo, todos.length-1);
         todo_input.value = "";
     }
 }
@@ -112,10 +200,9 @@ function toggle_complete_all_todos()
     let result = is_all_todos_completed();
     if (result.complete)
     {
-        let offset = 2;
-        for(var i = 2; i < children.length; ++i)
+        for(var i = 0; i < children.length; ++i)
         {
-            todos[i-offset].complete = false;
+            todos[i].complete = false;
             let check_button = children[i].children[0];
             check_button.innerHTML = "<i class=\"fa-regular fa-circle\"></i>";
             let content = children[i].children[1];
@@ -125,13 +212,12 @@ function toggle_complete_all_todos()
     }
     else
     {
-        let offset = 2;
         for(const index of result.indicies)
         {
             todos[index].complete = true;
-            let check_button = children[index + offset].children[0];
+            let check_button = children[index].children[0];
             check_button.innerHTML = "<i class=\"fa-solid fa-circle\"></i>";
-            let content = children[index + offset].children[1];
+            let content = children[index].children[1];
             content.classList.replace("text-neutral-600", "text-neutral-300");
             content.classList.add("line-through");       
         }
