@@ -8,6 +8,7 @@ const todo_complete_all_button = document.querySelector("#complete-all-todos");
 const todo_menu_all_button = document.querySelector("#todo-menu-all");
 const todo_menu_active_button = document.querySelector("#todo-menu-active");
 const todo_menu_completed_button = document.querySelector("#todo-menu-completed");
+const todo_clear_button = document.querySelector("#todo-clear-completed");
 
 todo_input.addEventListener("keyup", todo_enter);
 todo_complete_all_button.addEventListener("click", toggle_complete_all_todos);
@@ -70,6 +71,50 @@ todo_menu_completed_button.addEventListener("click", e =>
         }
     });
 });
+todo_clear_button.addEventListener("click", e => {
+    var i = 0;
+    while(has_completed(todos))
+    {
+        if(todos[i].complete)
+        {
+            todos.splice(i, 1);
+            i = 0;
+        }
+        ++i;
+    }
+    switch(selected_button)
+    {
+        case Todo_Menu_Buttons.Completed:
+            todo_list.innerHTML = "";
+            break;
+        case Todo_Menu_Buttons.All:
+            todo_list.innerHTML = "";
+            todos.forEach((todo, index) => {
+                append_todo_node(todo, index);
+            });
+            break;
+    }
+
+    e.currentTarget.classList.replace("visible", "invisible");
+    todo_item_count.innerHTML = todos.length + " item left";
+    if(todos.length === 0)
+    {
+        todo_control.classList.add("shadow-xl");
+        todo_info.classList.replace("visible", "invisible");
+    }
+});
+
+function show_clear_button()
+{
+    if(has_completed(todos))
+    {
+        todo_clear_button.classList.replace("invisible", "visible");
+    }
+    else
+    {
+        todo_clear_button.classList.replace("visible", "invisible");
+    }
+}
 
 function append_todo_node(todo, todo_index)
 {
@@ -100,6 +145,8 @@ function append_todo_node(todo, todo_index)
                 else e.currentTarget.innerHTML = "<i class=\"fa-regular fa-circle\"></i>";
                 update_todo_node(todos[id].complete, e.currentTarget.nextElementSibling);
         }
+
+        show_clear_button();
     });
     check_button.classList.add("basis-1/12", "px-5");
     
@@ -177,6 +224,13 @@ function update_todo_node(complete, element)
     }
 }
 
+function has_completed(array)
+{
+    return array.some((todo) => {
+        return todo.complete;
+    });
+}
+
 function is_all_todos_completed()
 {
     let is_complete = true;
@@ -199,6 +253,7 @@ function toggle_complete_all_todos()
     let children = todo_list.children;
     let length = children.length;
     let result = is_all_todos_completed();
+    
     if (result.complete)
     {
         for(var i = 0; i < length; ++i)
@@ -252,4 +307,6 @@ function toggle_complete_all_todos()
             });
         }
     }
+
+    show_clear_button();
 }
