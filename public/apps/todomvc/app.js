@@ -80,7 +80,8 @@ todo_clear_button.addEventListener("click", e => {
             todos.splice(i, 1);
             i = 0;
         }
-        ++i;
+        else
+            ++i;
     }
     switch(selected_button)
     {
