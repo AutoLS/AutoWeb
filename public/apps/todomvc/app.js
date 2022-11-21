@@ -83,6 +83,7 @@ todo_clear_button.addEventListener("click", e => {
         else
             ++i;
     }
+    localStorage.setItem("todos", JSON.stringify(todos));
     switch(selected_button)
     {
         case Todo_Menu_Buttons.Completed:
@@ -120,6 +121,7 @@ function show_clear_button()
 function append_todo_node(todo, todo_index)
 {
     let todo_node = document.createElement("div");
+    todo_node.setAttribute("data-index", todo_index);
     //child.innerHTML = todo_input.value;
     todo_node.classList.add("w-full", "border", "flex", "flex-row", "font-[\'Helvetica\']");
 
@@ -130,8 +132,10 @@ function append_todo_node(todo, todo_index)
         check_button.innerHTML = "<i class=\"fa-regular fa-circle\"></i>";
     
     check_button.addEventListener('click', (e) => {
-        let id = todo_index;
+        let id = e.currentTarget.parentElement.dataset.index;
+
         todos[id].complete = !todos[id].complete;
+        localStorage.setItem("todos", JSON.stringify(todos));
 
         switch(selected_button)
         {
@@ -160,16 +164,20 @@ function append_todo_node(todo, todo_index)
     delete_button.innerHTML = "x";
     delete_button.classList.add("basis-1/12", "px-5", "text-rose-300", "text-2xl", "invisible", "transition" , "ease-in", "duration-300", "hover:text-rose-600");
     delete_button.addEventListener("click", e => {
-        let index = todo_index;
-        todos.splice(index, 1);
+        let id = e.currentTarget.parentElement.dataset.index;
+        todos.splice(id, 1);
+        localStorage.setItem("todos", JSON.stringify(todos));
         todo_item_count.innerHTML = todos.length + " item left";
         if(todos.length <= 0)
         {
             todo_control.classList.add("shadow-xl");
             todo_info.classList.replace("visible", "invisible");
+            show_clear_button();
         } 
         todo_list.removeChild(e.currentTarget.parentElement);
     });
+
+    update_todo_node(todo.complete, todo_content);
 
     todo_node.appendChild(check_button);
     todo_node.appendChild(todo_content);
@@ -181,6 +189,7 @@ function append_todo_node(todo, todo_index)
     todo_node.addEventListener("mouseout", e => {
         e.currentTarget.children[2].classList.replace("visible", "invisible");
     });
+
     
     todo_list.appendChild(todo_node);
 }
@@ -201,6 +210,7 @@ function todo_enter(e)
             complete: false
         };
         todos.push(todo);
+        localStorage.setItem("todos", JSON.stringify(todos));
         
         todo_control.classList.remove("shadow-xl");
         todo_info.classList.replace("invisible", "visible");
@@ -311,3 +321,27 @@ function toggle_complete_all_todos()
 
     show_clear_button();
 }
+
+const loadTodos = () => {
+    todos = JSON.parse(localStorage.getItem("todos"));
+    if(todos === null)
+    {
+        todos = [];
+    }
+    else
+    {
+        if(todos.length > 0)
+        {
+            show_clear_button();
+            todo_item_count.innerHTML = todos.length + " item left";
+            todo_info.classList.replace("invisible", "visible");
+            todo_control.classList.remove("shadow-xl");
+            todo_menu_all_button.classList.add("border", "border-rose-300/25", "rounded", "px-2", "py-1");
+            todos.forEach((todo, index) => {
+                append_todo_node(todo, index);
+            });
+        }
+    }
+};
+
+window.addEventListener('load', loadTodos);
