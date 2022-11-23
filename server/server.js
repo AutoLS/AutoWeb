@@ -23,7 +23,7 @@ app.use(express.json());
 const clientPath = `${__dirname}/../public`;
 app.use(express.static(clientPath));
 
-app.get('\*', (req, res) => {
+app.get('/*', (req, res) => {
     console.log(req.url);
     res.sendFile(req.url + '/index.html');
 });
