@@ -1,4 +1,4 @@
-const socket = io(`${window.location.protocol}//${window.location.hostname}:3000`)
+const socket = io(`${window.location.protocol}//${window.location.hostname}:3030`)
 
 //Global data
 const urlData = Qs.parse(location.search, {ignoreQueryPrefix: true});
