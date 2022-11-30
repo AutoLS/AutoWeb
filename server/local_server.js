@@ -1,8 +1,18 @@
 const express = require('express');
 const path = require('path');
 const http = require('http');
+var fs = require('fs');
 const app = express();
 const socketio = require('socket.io');
+const { response } = require('express');
+const { error } = require('console');
+
+let dbconinfo = fs.readFileSync('dbcon.json');
+let dbconConfig = JSON.parse(dbconinfo);
+console.log(dbconConfig);
+
+const Pool = require('pg').Pool;
+const db = new Pool(dbconConfig);
 
 const logger = (req, res, next) =>
 {
@@ -15,6 +25,12 @@ app.use(logger);
 app.use(express.json());
 const clientPath = `${__dirname}/../public`;
 app.use(express.static(clientPath));
+app.use(function(req, res, next) {
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8080');
+    res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Access-Control-Allow-Headers');
+    next();
+});
 
 app.get('/api/getRandomNum', (req, res) => {
     let num = Math.floor(Math.random() * 100) + 1;
@@ -81,3 +97,49 @@ io.on('connect', (sock) => {
         io.emit('update_users', {users: usersList});
     });
 });
+
+app.post('/chat/post', (req, res) => {
+    const {name, message} = req.body;
+    console.log(req.body);
+    createMessage(name, message).then(response => {
+        res.set('content-type', 'text/plain');
+        res.send(response);
+        res.status(200).end();
+    }).catch(error => {
+        res.status(500).send(error);
+    });
+});
+
+app.get('/chat/messages', (req, res) => {
+    getMessages().then(response => {
+        res.set('content-type', 'application/json');
+        res.send({messages: response});
+        res.status(200).end();
+    }).catch(error => {
+        res.status(500).send(error);
+    });
+});
+
+const getMessages = () => {
+    return new Promise(function(resolve, reject) {
+        db.query('SELECT * FROM message_logs ORDER BY id ASC', (error, results) => {
+            if(error) {
+                reject(error);
+            }
+            
+            resolve(results.rows);
+        });
+    });
+};
+
+const createMessage = (name, text) => {
+    return new Promise(function(resolve, reject) {
+        db.query('INSERT INTO message_logs (username, message) VALUES ($1, $2) RETURNING *', [name, text], (error, results) => {
+            if(error) {
+                reject(error);
+            }
+
+            resolve(`Message logged.`);
+        });
+    });
+};
