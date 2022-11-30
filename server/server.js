@@ -1,9 +1,18 @@
+require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const https = require('https');
-var fs = require('fs');
+const http = require('http');
+const mongoose = require('mongoose');
+const todoRoutes = require('./routes/todos');
+const userRoutes = require('./routes/users');
+const fs = require('fs');
 const app = express();
 const socketio = require('socket.io');
+const cors = require('cors');
+
+const startup_args = process.argv.slice(2);
+const deploy_arg = startup_args[0];
 
 // NOTE: For ssh
 const options = {
@@ -22,18 +31,11 @@ app.use(logger);
 app.use(express.json());
 const clientPath = `${__dirname}/../public`;
 app.use(express.static(clientPath));
+app.use(cors);
 
-app.get('/*', (req, res) => {
-    console.log(req.url);
-    res.sendFile(req.url + '/index.html');
-});
-
-app.use(function(req, res, next) {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Access-Control-Allow-Headers');
-    next();
-});
+//routes
+app.use('/api/todos', todoRoutes);
+app.use('/api/users', userRoutes);
 
 app.get('/api/getRandomNum', (req, res) => {
     let num = Math.floor(Math.random() * 100) + 1;
@@ -62,8 +64,19 @@ app.get('/api/get_tweets', (req, res) => {
 });
 //END OF TWEET API
 
-const server = https.createServer(options, app).listen(443, () => {
-    console.log("Listening on port 443...");
+let server;
+
+mongoose.connect(process.env.MONGO_URI).then(() => {
+    if(deploy_arg === 'deploy') {
+        server = https.createServer(options, app).listen(443, () => {
+            console.log("Created deployment server, connected to db and listening on port");
+        });
+    }
+    else {
+        server = http.createServer(app).listen(8080, () => {
+            console.log("Connected to db and listening on port 8080...");
+        });
+    }
 });
 
 const io = socketio(server);
