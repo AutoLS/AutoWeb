@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>TODO Clone</title>
+        <meta name="author" content="AutoLs">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script src="https://kit.fontawesome.com/92225220cd.js" crossorigin="anonymous"></script>
+        <script type="text/javascript" src="app.js" defer></script>
+    </head>
+    <body>
+        <div class="text-8xl text-rose-400/25 font-['Helvetica'] font-normal m-auto w-max">todos</div>
+        <div id="todo-control" class="m-auto w-1/4 flex flex-wrap border mt-5 shadow-xl">
+            <button id="complete-all-todos" class="px-5 w-2/8"><i class="fa-solid fa-check"></i></button>
+            <input id="todo-input" type="text" placeholder="What needs to be done?" class="font-['Helvetica'] text-neutral-600 text-2xl p-3 w-6/8 outline-0 placeholder:text-slate-400/10 placeholder:font-normal placeholder:italic">
+        </div>
+        <div id="todo-list" class="m-auto w-1/4 flex flex-wrap"></div>
+        <div id="todo-info" class="m-auto w-1/4 flex invisible shadow-xl border p-2 text-neutral-500 font-['Helvetica'] text-sm space-x-16">
+            <div id="todo-item-count" class="p-1">0 item left</div>
+            <div id="todo-menu" class="space-x-1">
+                <button id="todo-menu-all">All</button>
+                <button id="todo-menu-active">Active</button>
+                <button id="todo-menu-completed">Completed</button>
+            </div>
+            <button id="todo-clear-completed" class="hover:underline invisible">Clear completed</button>
+        </div>
+    </body>
+</html>
